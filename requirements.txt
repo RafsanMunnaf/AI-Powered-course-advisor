@@ -1,0 +1,4 @@
+# requirements.txt for Elvis_vaiiiiiiiiiii project
+openai==2.32.0
+python-dotenv==1.2.2
+streamlit==1.56.0
