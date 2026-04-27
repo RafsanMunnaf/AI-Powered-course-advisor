@@ -87,8 +87,9 @@ MAX_HISTORY_PAIRS = 10
 # 2. ROLE-SPECIFIC SYSTEM PROMPTS
 # ==========================================
 STUDENT_SYSTEM_PROMPT = f"""
-You are a warm, motivational, and encouraging support assistant for 
-Fast Sales Training Center. You are speaking to a STUDENT — someone who 
+You are a REAL HUMAN support advisor named Sarah who works at Fast Sales 
+Training Center. You are NOT an AI or a bot — you must write exactly like a 
+real person would in a live chat. You are speaking to a STUDENT — someone who 
 is interested in learning, enrolling in courses, and building a career 
 in the auto sales industry.
 
@@ -96,16 +97,24 @@ DATABASE:
 {KNOWLEDGE_BASE_STRING}
 
 TONE & PERSONALITY:
-- Be warm, supportive, and genuinely encouraging — like a mentor who 
-  believes in the student's potential.
-- Show excitement about their career journey.
-- Use motivational language: "Great choice!", "You're on the right track!", 
-  "This could be a game-changer for your career!"
-- Use the student's name if they share it.
-- Express empathy when they share challenges or doubts about their career.
+- Be extraordinarily kind, dear, and deeply empathetic — act like an incredibly helpful and loving client support advisor who genuinely cares about the student's success and well-being.
+- Show heartfelt excitement and care for their personal journey. Treat them as if they are dear to you.
+- Be extremely helpful, offering all the guidance they could possibly need. Go above and beyond to provide the best client support possible.
+- Use deeply encouraging language: "I'm so proud of you for taking this step!", "You are going to do amazing things!", "I truly believe this could change your life!"
+- Express deep empathy when they share challenges or doubts. Validate their feelings with kindness and care.
+
+HUMAN-LIKE ADDRESSING:
+- If the student provides their name, use it naturally: "Of course, dear John!", 
+  "That's a wonderful question, Maria!"
+- Do NOT use "sir" or "ma'am" for students. Address them by their first name if provided. If you don't know their name, use incredibly warm and affectionate terms like "my dear", "friend", or "sweetheart".
+- NEVER use the word "assist". NEVER say "How can I assist you today?".
+- If a user just says "hi", "hello", or "help", respond with genuine warmth and kindness: "Hello my dear! It is so wonderful to connect with you. How can I help you on your journey today?"
+- Write like a real human support person — use contractions ("you'll", 
+  "we've", "that's"), vary sentence length, and keep the tone natural, 
+  kind, and conversational.
 
 RESPONSE FORMAT:
-- Keep answers concise but thorough (2-4 sentences for simple questions).
+- Keep answers highly compact and brief by default (1-3 sentences). Only provide detailed, longer responses if the user explicitly asks for more details or if the question inherently requires a longer explanation to be helpful.
 - Use bullet points when listing multiple items.
 - Bold key information using **double asterisks**.
 - When describing a course, highlight what they'll LEARN and how it helps 
@@ -129,28 +138,47 @@ INSTRUCTIONS:
 6. NEVER invent information not in the database.
 7. If a student seems unsure about which course to take, ask about their 
    goals and guide them to the right fit.
+8. NEVER say you are an AI, a bot, or a virtual assistant. If asked who you are, 
+   say "I'm Sarah, a support advisor here at Fast Sales Training Center."
 """
 
 DEALER_SYSTEM_PROMPT = f"""
-You are a professional, business-oriented support assistant for 
-Fast Sales Training Center. You are speaking to a DEALER — someone who 
-is interested in distributing, selling, or promoting our training courses 
-through our affiliate program or partnership opportunities.
+You are a REAL HUMAN business partnerships representative named Michael 
+who works at Fast Sales Training Center. You are NOT an AI or a bot — you must 
+write exactly like a real person would in a professional live chat. You are 
+speaking to a DEALER — someone who is interested in distributing, selling, 
+or promoting our training courses through our affiliate program or 
+partnership opportunities.
 
 DATABASE:
 {KNOWLEDGE_BASE_STRING}
 
 TONE & PERSONALITY:
-- Be professional, confident, and results-oriented — like a business 
-  development partner.
+- Be highly professional, polite, and confident. Always reply in a strictly professional tone.
+- Show deep admiration and respect for the dealer and their business accomplishments. Express how much you admire their dealership.
 - Focus on ROI, revenue potential, and business growth.
 - Use business language: "strong conversion rates", "revenue opportunity", 
   "proven demand", "competitive commissions".
-- Be respectful of their time — get to the point quickly.
-- Show appreciation for their interest in partnering with us.
+- Be highly respectful of their time and expertise.
+
+HUMAN-LIKE ADDRESSING:
+- If the dealer provides their name, use it naturally and respectfully: "Absolutely, James!", 
+  "Great to hear that, Patricia!"
+- Always maintain an admiring, professional, and respectful addressing style.
+- If the dealer's name or message suggests they are male, address them 
+  as "sir" naturally (e.g., "Of course, sir.", "Absolutely, sir.").
+- If the dealer's name or message suggests they are female, address them 
+  as "ma'am" naturally (e.g., "Great question, ma'am.", "Happy to walk 
+  you through that, ma'am.").
+- If gender is unclear, politely default to "sir" as a sign of profound respect (e.g., "Yes, sir!", "What can I do for you, sir?").
+- NEVER use the word "assist". NEVER say "How can I assist you today?".
+- If a user just says "hi", "hello", or "help", respond with professional courtesy and admiration: "Hello! It's an honor to connect with you. How's your dealership doing today, sir? What can I do for you?"
+- Write like a real human support person — use contractions ("you'll", 
+  "we've", "that's"), keep the tone extremely professional, respectful, 
+  and conversational, never robotic.
 
 RESPONSE FORMAT:
-- Keep answers concise and business-focused.
+- Keep answers highly compact and brief by default (1-3 sentences). Only provide detailed, longer responses if the dealer explicitly asks for more details or if the question inherently requires a longer explanation to be helpful.
 - Use bullet points for benefits, features, and key selling points.
 - Bold key numbers, benefits, and action items using **double asterisks**.
 - When describing courses, highlight their **marketability** and **demand** 
@@ -177,6 +205,8 @@ INSTRUCTIONS:
 7. NEVER invent information not in the database.
 8. If a dealer asks which courses to promote first, recommend based on 
    broad market appeal and career demand.
+9. NEVER say you are an AI, a bot, or a virtual assistant. If asked who you are, 
+   say "I'm Michael, from the partnerships team at Fast Sales Training Center."
 """
 
 
@@ -203,7 +233,7 @@ def generate_support_response(user_query: str, chat_history: list, role: str) ->
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=messages,
-            temperature=0.0,
+            temperature=0.3,
         )
         return response.choices[0].message.content
     except Exception as e:
@@ -226,7 +256,7 @@ ROLE_CONFIG = {
         "welcome": """
 **👋 Welcome, future auto sales professional!**
 
-I'm your personal support assistant at **Fast Sales Training Center**. 
+I'm Sarah, your personal support advisor at **Fast Sales Training Center**. 
 I'm here to help you find the right training path for your career!
 
 Here are some things you can ask me:
@@ -262,7 +292,7 @@ Here are some things you can ask me:
         "welcome": """
 **👋 Welcome, valued partner!**
 
-I'm your business support assistant at **Fast Sales Training Center**. 
+I'm Michael, your business partnerships rep at **Fast Sales Training Center**. 
 I can help you explore our partnership and distribution opportunities.
 
 Here are some things you can ask me:
@@ -302,42 +332,96 @@ st.markdown("""
 <style>
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
+    header {display: none !important;}
     
-    .chat-header {
-        padding: 1.5rem 2rem;
-        border-radius: 12px;
-        margin-bottom: 1.5rem;
-        text-align: center;
+    /* Remove padding from the main block to make the header flush */
+    .block-container {
+        padding-top: 1rem !important;
+        padding-bottom: 5rem;
+    }
+    
+    /* Custom Chat Header */
+    .custom-chat-header {
+        background-color: #254593;
+        padding: 15px 20px;
+        display: flex;
+        align-items: center;
         color: white;
+        margin: 0 -2rem 20px -2rem; /* Stretch sideways but don't pull up too far */
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-    .chat-header h1 {
-        margin: 0;
-        font-size: 1.5rem;
-        font-weight: 700;
+    .header-avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        margin-right: 15px;
+        object-fit: cover;
+        background-color: #ddd;
     }
-    .chat-header p {
-        margin: 0.4rem 0 0 0;
-        font-size: 0.9rem;
-        opacity: 0.85;
+    .header-info {
+        flex-grow: 1;
+    }
+    .header-name {
+        font-weight: bold;
+        font-size: 16px;
+        margin-bottom: 2px;
+    }
+    .header-role {
+        font-size: 12px;
+        opacity: 0.8;
+    }
+    .header-close {
+        font-size: 24px;
+        cursor: pointer;
+        font-weight: 300;
+    }
+
+    /* Chat Bubbles */
+    .chat-row {
+        display: flex;
+        margin-bottom: 15px;
+        width: 100%;
+    }
+    .row-user {
+        justify-content: flex-end;
+    }
+    .row-bot {
+        justify-content: flex-start;
     }
     
-    .role-badge {
-        display: inline-block;
-        padding: 0.25rem 0.75rem;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        margin-top: 0.5rem;
+    .chat-bubble {
+        padding: 12px 18px;
+        border-radius: 15px;
+        max-width: 75%;
+        font-family: sans-serif;
+        font-size: 15px;
+        line-height: 1.4;
+        word-wrap: break-word;
     }
-    .role-student {
-        background: rgba(79, 195, 247, 0.2);
-        color: #4fc3f7;
-        border: 1px solid #4fc3f7;
+    .bubble-user {
+        background-color: #254593;
+        color: white;
+        border-bottom-right-radius: 4px;
     }
-    .role-dealer {
-        background: rgba(129, 199, 132, 0.2);
-        color: #81c784;
-        border: 1px solid #81c784;
+    .bubble-bot {
+        background-color: #EFEFEF;
+        color: #111;
+        border-bottom-left-radius: 4px;
+    }
+    
+    /* Style the st.chat_input container to match the image's grey footer */
+    [data-testid="stChatInput"] {
+        background-color: #F4F4F4;
+        border: none;
+        border-radius: 0;
+    }
+    [data-testid="stChatInput"] textarea {
+        background-color: transparent;
+        border: none;
+        box-shadow: none !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -388,15 +472,21 @@ with st.sidebar:
 # ==========================================
 cfg = ROLE_CONFIG[role]
 
-# Header with role-specific gradient
-role_badge_class = "role-student" if role == "student" else "role-dealer"
-role_label = "Student Mode" if role == "student" else "Dealer Mode"
+# Setup human persona details based on role
+bot_name = "Sarah" if role == "student" else "Michael"
+bot_role_title = "Chat Professional" if role == "student" else "Partnership Advisor"
+# Use a placeholder avatar image that looks professional (like the image)
+avatar_url = "https://img.freepik.com/free-photo/young-beautiful-woman-pink-warm-sweater-natural-look-smiling-portrait-isolated-long-hair_285396-896.jpg" if role == "student" else "https://img.freepik.com/free-photo/handsome-confident-smiling-man-with-hands-crossed-chest_176420-18743.jpg"
 
+# Render custom header matching the image
 st.markdown(f"""
-<div class="chat-header" style="background: {cfg['gradient']};">
-    <h1>🚗 Fast Sales Training Center</h1>
-    <p>AI-Powered {cfg['title']}</p>
-    <span class="role-badge {role_badge_class}">{cfg['icon']} {role_label}</span>
+<div class="custom-chat-header">
+    <img src="{avatar_url}" class="header-avatar" />
+    <div class="header-info">
+        <div class="header-name">{bot_name}</div>
+        <div class="header-role">{bot_role_title}</div>
+    </div>
+    <div class="header-close">✕</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -404,35 +494,54 @@ st.markdown(f"""
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
+# Helper function to render custom chat bubbles
+def render_message(role, content):
+    if role == "user":
+        st.markdown(f"""
+        <div class="chat-row row-user">
+            <div class="chat-bubble bubble-user">{content}</div>
+        </div>
+        """, unsafe_allow_html=True)
+    else:
+        # For bot, we convert basic markdown (like bolding) to HTML for rendering
+        import markdown
+        html_content = markdown.markdown(content)
+        st.markdown(f"""
+        <div class="chat-row row-bot">
+            <div class="chat-bubble bubble-bot">{html_content}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
 # Welcome message (shown when no messages yet)
 if not st.session_state.messages:
-    with st.chat_message("assistant", avatar=cfg["avatar_bot"]):
-        st.markdown(cfg["welcome"])
+    if role == "student":
+        welcome_text = "Hey! Welcome to Fast Sales.<br>Are you looking to kickstart your career in the auto industry today?"
+    else:
+        welcome_text = "Hey there! Welcome to Fast Sales.<br>Are you interested in partnering with us or checking out our affiliate program?"
+    render_message("assistant", welcome_text)
 
 # Display chat history
 for message in st.session_state.messages:
-    avatar = cfg["avatar_user"] if message["role"] == "user" else cfg["avatar_bot"]
-    with st.chat_message(message["role"], avatar=avatar):
-        st.markdown(message["content"])
+    render_message(message["role"], message["content"])
 
 # Chat input
-if prompt := st.chat_input("Type your question here..."):
-    # Display user message
-    with st.chat_message("user", avatar=cfg["avatar_user"]):
-        st.markdown(prompt)
+if prompt := st.chat_input("Type Your Message..."):
+    # Display user message immediately
+    render_message("user", prompt)
 
     # Add user message to history
     st.session_state.messages.append({"role": "user", "content": prompt})
 
-    # Generate response
-    with st.chat_message("assistant", avatar=cfg["avatar_bot"]):
-        with st.spinner("Thinking..."):
-            response = generate_support_response(
-                prompt, 
-                st.session_state.messages[:-1],
-                role
-            )
-        st.markdown(response)
+    # Generate response (showing a spinner while thinking)
+    with st.spinner("Typing..."):
+        response = generate_support_response(
+            prompt, 
+            st.session_state.messages[:-1],
+            role
+        )
+    
+    # Render bot response
+    render_message("assistant", response)
 
     # Add bot response to history
     st.session_state.messages.append({"role": "assistant", "content": response})
