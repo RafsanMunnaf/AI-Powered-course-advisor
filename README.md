@@ -67,3 +67,5 @@ For a simple terminal-based chat session:
 ```bash
 python main.py
 ```
+
+# AI-Powered-course-advisor
