@@ -1,5 +1,7 @@
-# requirements.txt for Elvis_vaiiiiiiiiiii project
+# Core dependencies for chatbot.py / main.py
 openai==2.32.0
 python-dotenv==1.2.2
-streamlit==1.56.0
-markdown
+python-docx>=1.1.0
+
+# Only needed if running the Streamlit UI (app.py)
+# streamlit==1.56.0

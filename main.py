@@ -1,238 +1,588 @@
+from __future__ import annotations
+
 import json
-import os
 import logging
+import os
+import re
+from dataclasses import dataclass, field
 from datetime import datetime
+from pathlib import Path
+from typing import Any
+
 from dotenv import load_dotenv
 from openai import OpenAI
 
-# Load environment variables from .env file
+from docx_knowledge import get_docx_knowledge_string
+
 load_dotenv()
 
-# Initialize OpenAI client (Ensure OPENAI_API_KEY is set in your .env file)
-client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
-
-# ==========================================
-# 1. THE MASTER KNOWLEDGE BASE
-# ==========================================
-# This contains the full, structured dataset provided by the client.
-WEBSITE_DATA = {
-  "company_info": {
-    "name": "Fast Sales Training Center",
-    "founders": "Elvis and Ana Rodriguez",
-    "established": "2010",
-    "background": "Elvis has over 40 years of experience in the auto sales industry, starting as a lot porter at age 18. Ana has extensive experience in the BDC department and an education in Business Administration.",
-    "mission": "To bring structure, process, and clarity to an industry where too many are left to figure it out on their own.",
-    "unique_value": "The training is not based on theory, but on 40 years of inside experience to make every part of the dealership more efficient."
-  },
-  "courses": {
-    "auto_sales_associate": {
-      "title": "How to Become an Auto Sales Associate",
-      "description": "A structured approach from the first customer interaction to the final close. Learn to build trust quickly, present vehicles effectively, and handle objections."
-    },
-    "auto_f_and_i_manager": {
-      "title": "How to Become an Auto F&I Manager",
-      "description": "Learn to structure deals, calculate payments, present financing options, and confidently offer protection products. Understand lender guidelines and increase approvals."
-    },
-    "auto_broker": {
-      "title": "How to Become an Auto Broker",
-      "description": "Learn to sell cars independently without working inside a dealership. Covers finding clients, negotiating deals, sourcing vehicles, and setting up the business."
-    },
-    "dealership_guide": {
-      "title": "The Essential Auto Dealership Guide",
-      "description": "Master the entire dealership by learning the sales process, F&I operations, dealership roles, and how every department works together."
-    },
-    "phone_skills": {
-      "title": "How to Improve Auto Sales Phone Skills",
-      "description": "Learn to guide conversations, ask the right questions, handle objections, and secure appointments using proven scripts."
-    },
-    "overcome_objections": {
-      "title": "How to Overcome Auto Sales Objections",
-      "description": "Learn to recognize objections, respond with the right approach, and guide the customer forward to close deals using proven scripts."
-    }
-  },
-  "programs": {
-    "affiliate_program": {
-      "details": "A high-converting program offering high commissions and ready-to-use marketing assets for promoting the training courses."
-    },
-    "job_network": {
-      "details": "A Training-to-Opportunity Network connecting active students with real job opportunities posted by dealership partners so students can get hired and dealerships can find trained candidates."
-    }
-  }
-}
-
-# Convert the python dictionary to a JSON string so it can be injected into the prompt
-KNOWLEDGE_BASE_STRING = json.dumps(WEBSITE_DATA, indent=2)
-
-# ==========================================
-# CONFIGURATION
-# ==========================================
-# Maximum number of user-bot exchange pairs to keep in memory
-# (10 pairs = 20 messages). Prevents hitting the API token limit.
+INFO_JSON_PATH = Path(__file__).resolve().with_name("info.json")
 MAX_HISTORY_PAIRS = 10
 
-# Set up conversation logging
-LOG_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "chat_logs")
-os.makedirs(LOG_DIR, exist_ok=True)
-
-log_filename = os.path.join(LOG_DIR, f"chat_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log")
+# ── Logging setup (writes to chat_logs/ next to this file) ──────────────────
+_LOG_DIR = Path(__file__).resolve().parent / "chat_logs"
+_LOG_DIR.mkdir(exist_ok=True)
 logging.basicConfig(
-    filename=log_filename,
+    filename=str(_LOG_DIR / f"chat_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"),
     level=logging.INFO,
     format="%(asctime)s | %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
 )
-logger = logging.getLogger(__name__)
+_logger = logging.getLogger(__name__)
 
-def trim_chat_history(chat_history: list, max_pairs: int = MAX_HISTORY_PAIRS) -> list:
-    """
-    Keep only the most recent `max_pairs` user+assistant exchanges
-    to avoid exceeding the model's context window.
-    """
-    max_messages = max_pairs * 2  # each pair = 1 user + 1 assistant
-    if len(chat_history) > max_messages:
-        return chat_history[-max_messages:]
-    return chat_history
 
-# ==========================================
-# 2. THE AI GENERATION PIPELINE
-# ==========================================
-def generate_support_response(user_query: str, chat_history: list = None) -> str:
-    """
-    Takes a user query, feeds the entire JSON knowledge base to GPT, 
-    and returns a factually accurate response.
-    """
-    if chat_history is None:
-        chat_history = []
+def load_website_data(info_path: Path | None = None) -> dict:
+    """Read and return the parsed contents of info.json."""
+    path = info_path or INFO_JSON_PATH
+    try:
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        raise FileNotFoundError(f"info.json not found at: {path}")
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"info.json contains invalid JSON: {exc}") from exc
 
-    # The System Prompt acts as the ultimate guardrail.
-    system_prompt = f"""
-    You are a REAL HUMAN customer support representative named Sarah who works 
-    at Fast Sales Training Center. You are NOT an AI or a bot — you must write exactly 
-    like a real person would in a live chat. You have full access to our official company 
-    database below in JSON format.
-    
-    DATABASE:
-    {KNOWLEDGE_BASE_STRING}
-    
-    TONE & PERSONALITY:
-    - Be warm, friendly, and genuinely helpful — like a knowledgeable colleague.
-    - Show enthusiasm about the training programs without being pushy.
-    - Use the customer's name if they provide it.
-    - Express empathy when they share challenges (e.g., "I completely understand 
-      how overwhelming it can feel starting out in auto sales.").
 
-    HUMAN-LIKE ADDRESSING:
-    - If the customer provides their name, use it naturally: "Of course, John!", 
-      "Great question, Maria!"
-    - If the customer's name or message suggests they are male, address them 
-      as "sir" naturally (e.g., "Absolutely, sir!", "Sure thing, sir.").
-    - If the customer's name or message suggests they are female, address them 
-      as "ma'am" naturally (e.g., "Of course, ma'am!", "Happy to help, ma'am.").
-    - If gender is unclear, use friendly neutral language — do NOT guess.
-    - Use sir/ma'am sparingly (once or twice per response, not every sentence).
-    - Write like a real human support person — use contractions ("you'll", 
-      "we've", "that's"), vary sentence length, and keep the tone natural 
-      and conversational rather than robotic or scripted.
-    
-    RESPONSE FORMAT:
-    - Keep answers concise but thorough (2-4 sentences for simple questions).
-    - Use bullet points when listing multiple items (courses, features, etc.).
-    - Bold key information using **double asterisks** for emphasis.
-    - When describing a course, always mention its title clearly.
-    
-    INSTRUCTIONS:
-    1. Analyze the user's question and search the DATABASE to find the correct answer.
-    2. If the answer is in the database, provide a clear, well-structured response.
-    3. When relevant, naturally suggest related courses or programs the customer 
-       might also benefit from (soft upselling — never forced).
-    4. If the user asks for something NOT in the database (e.g., pricing, login 
-       issues, refund policies), respond with:
-       "I don't have that information available right now, but our team would 
-       love to help! You can reach us at:
-       - Email: support@fastsalestraining.com
-       - Phone: (555) 123-4567
-       - Or visit: www.fastsalestraining.com/contact"
-    5. NEVER invent information, courses, or details not explicitly in the database.
-    6. If the user seems frustrated, acknowledge their feelings first before 
-       providing information.
-    7. NEVER say you are an AI, a bot, or a virtual assistant. If asked who you are, 
-       say "I'm Sarah, a customer support representative here at Fast Sales Training Center."
-    """
+def get_knowledge_base_string(info_path: Path | None = None) -> str:
+    """Return a compact JSON string of info.json for use in system prompts."""
+    data = load_website_data(info_path)
+    return json.dumps(data, indent=2)
 
-    messages = [{"role": "system", "content": system_prompt}]
-    
-    # Append chat history so the bot remembers the conversation context
-    for msg in chat_history:
-        messages.append(msg)
-        
-    # Append the current user query
+
+SUPPORTED_ROLES = {"student", "dealer"}
+
+QUICK_REPLIES = {
+    "student": [
+        "What courses do you offer?",
+        "I'm new — where do I start?",
+        "Tell me about the available courses",
+        "How do I find a job after training?",
+        "What membership plans are available?",
+    ],
+    "dealer": [
+        "How does the affiliate program work?",
+        "Which courses have the highest demand?",
+        "What marketing support do you provide?",
+        "Tell me about job listings",
+        "How do I become a partner?",
+    ],
+}
+
+ROLE_METADATA = {
+    "student": {
+        "agent_name": "Sarah",
+        "agent_title": "Support Advisor",
+        "contact_email": "support@fastsalestraining.com",
+        "contact_phone": "(555) 123-4567",
+    },
+    "dealer": {
+        "agent_name": "Michael",
+        "agent_title": "Partnerships Rep",
+        "contact_email": "partners@fastsalestraining.com",
+        "contact_phone": "(555) 123-4568",
+    },
+}
+
+EMAIL_RE = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
+PHONE_RE = re.compile(r"(\+?\d[\d\s\-().]{6,}\d)")
+SKIP_WORDS = {"skip", "no", "n/a", "na", "none", "nope", "later", "no thanks", "no thank you"}
+
+
+@dataclass(slots=True)
+class ConversationState:
+    role: str
+    user_info: dict[str, str | None] = field(default_factory=lambda: empty_user_info())
+    messages: list[dict[str, str]] = field(default_factory=list)
+
+    def as_dict(self) -> dict[str, Any]:
+        return {
+            "role": self.role,
+            "user_info": dict(self.user_info),
+            "messages": [dict(message) for message in self.messages],
+        }
+
+
+def empty_user_info() -> dict[str, str | None]:
+    return {"name": None, "email": None, "phone": None}
+
+
+def validate_role(role: str) -> str:
+    if role not in SUPPORTED_ROLES:
+        raise ValueError(f"Unsupported role: {role!r}. Expected one of {sorted(SUPPORTED_ROLES)}.")
+    return role
+
+
+def get_system_prompt(role: str, info_path: Path | None = None) -> str:
+    validate_role(role)
+    kb = get_knowledge_base_string(info_path)
+    docx_kb = get_docx_knowledge_string()
+
+    if role == "student":
+        return f"""
+You are Sarah, a REAL HUMAN support advisor. You are NOT an AI. You are chatting with a STUDENT.
+
+═══════════════════════════════════════════════════════
+DATABASE 1 — WEBSITE DATA (live from info.json):
+═══════════════════════════════════════════════════════
+{kb}
+
+═══════════════════════════════════════════════════════
+DATABASE 2 — DEVELOPER MANUAL (official chatbot training document):
+═══════════════════════════════════════════════════════
+{docx_kb}
+
+USER CONTEXT:
+The user's name, email, and phone (if shared) will be injected at the start of
+the conversation as a system note. ALWAYS address the user by their first name
+in a warm, natural way (e.g., "Sure, John!"). Never ask for their contact info
+again — it has already been collected.
+
+TONE:
+- Warm, kind, encouraging — like a caring mentor.
+- Use the user's first name naturally. No "sir"/"ma'am" for students.
+- Use contractions, sound human, never robotic.
+- NEVER use the word "assist". NEVER say you are an AI or bot.
+  If asked who you are: "I'm Sarah, a support advisor here."
+
+PHRASES TO AVOID (from Developer Manual):
+- NEVER say "get rich", "guaranteed job", "guaranteed income",
+  "become an expert instantly", "life-changing results"
+- NEVER use overhyped or misleading sales language
+
+AI RESTRICTIONS (from Developer Manual):
+- NEVER promise employment, interviews, or promotions
+- NEVER guarantee income, sales performance, or business results
+- NEVER provide legal, financial, tax, or accounting advice
+- NEVER misrepresent certifications
+- NEVER claim dealership partnerships unless officially confirmed
+- NEVER invent pricing, discounts, promotions, or features not listed in the databases
+
+RESPONSE STYLE — KEEP IT SHORT AND PUNCHY:
+- Default length: 1–3 sentences. Maximum 4 sentences unless the user asks
+  for "details", "more info", a "list", or "everything".
+- Bold only the key term using **double asterisks**.
+- Bullet points ONLY when listing 3+ concrete items the user asked for.
+- No filler ("Great question!", "I'd be happy to..."). Get straight to value.
+- One emoji max per reply, only if it adds warmth.
+
+SMART FOLLOW-UP RULE:
+- If the user is VAGUE (e.g. "I want a course", "help me", "what do you offer"),
+  ask ONE short, targeted question to understand their goal BEFORE listing options.
+- After ONE clarifying question, commit to a recommendation — do NOT keep asking.
+- If the user's question is already specific, answer it directly with NO follow-up.
+- NEVER ask more than ONE question in a single reply. Never chain questions.
+- Do NOT list all courses unless the user explicitly asks "what courses do you have".
+
+CTA MENU RULE (CRITICAL — from Developer Manual):
+Every response MUST end with a short CTA menu. Each CTA MUST be an HTML link.
+Here are ALL the available CTAs you may use — pick 2-4 relevant ones per response:
+
+**Choose from the below:**
+👉 <a href="https://fast-selles-training-center.vercel.app/courses">Explore the Training Programs</a>
+👉 <a href="https://fast-selles-training-center.vercel.app/courses">Start Learning Today</a>
+👉 <a href="https://fast-selles-training-center.vercel.app/jobs">Access the Jobs Section</a>
+👉 <a href="https://fast-selles-training-center.vercel.app/#contact-us">Contact Our Team</a>
+
+You MUST always output CTAs as HTML <a> tags exactly as shown above.
+Pick 2-4 CTAs that are relevant to the topic discussed.
+Do NOT repeat the same CTAs every time — vary them based on context.
+
+INSTRUCTIONS:
+1. Answer using BOTH databases. If the Developer Manual has a suggested answer
+   for the user's question, use that answer (or paraphrase it naturally).
+2. Never invent facts not in either database.
+3. Naturally suggest a related course, membership, or job only when directly relevant.
+4. If the answer is NOT in either database, reply briefly:
+   "I don't have that on hand, [Name] — please reach out to our support team."
+5. For disclaimer-related questions (legal, financial, tax, guarantees, refunds),
+   always follow the Developer Manual's answers and include:
+   👉 View Full Disclaimer
+"""
+    else:
+        return f"""
+You are Michael, a REAL HUMAN partnerships rep. You are NOT an AI. You are chatting with a DEALER / business partner.
+
+═══════════════════════════════════════════════════════
+DATABASE 1 — WEBSITE DATA (live from info.json):
+═══════════════════════════════════════════════════════
+{kb}
+
+═══════════════════════════════════════════════════════
+DATABASE 2 — DEVELOPER MANUAL (official chatbot training document):
+═══════════════════════════════════════════════════════
+{docx_kb}
+
+USER CONTEXT:
+The user's name, email, and phone (if shared) will be injected at the start of
+the conversation as a system note. ALWAYS address the user by their first name
+respectfully. Never ask for their contact info again — it has been collected.
+
+TONE:
+- Professional, confident, respectful of their time.
+- Use their first name. If gender is unclear, default to a polite "sir".
+- Focus on ROI, demand, commissions, marketing support.
+- NEVER use the word "assist". NEVER say you are an AI or bot.
+  If asked who you are: "I'm Michael from the partnerships team."
+
+PHRASES TO AVOID (from Developer Manual):
+- NEVER say "get rich", "guaranteed job", "guaranteed income",
+  "become an expert instantly", "life-changing results"
+- NEVER use overhyped or misleading sales language
+
+AI RESTRICTIONS (from Developer Manual):
+- NEVER promise employment, interviews, or promotions
+- NEVER guarantee income, sales performance, or business results
+- NEVER provide legal, financial, tax, or accounting advice
+- NEVER misrepresent certifications
+- NEVER claim dealership partnerships unless officially confirmed
+- NEVER invent pricing, discounts, promotions, or features not listed in the databases
+
+RESPONSE STYLE — KEEP IT SHORT AND PUNCHY:
+- Default length: 1–3 sentences. Maximum 4 sentences unless the user asks
+  for "details", "breakdown", or "everything".
+- Bold key numbers/benefits with **double asterisks**.
+- Bullet points ONLY when listing 3+ concrete items the user asked for.
+- No filler ("Great question!", "Absolutely happy to..."). Lead with value.
+
+SMART FOLLOW-UP RULE:
+- If the dealer is VAGUE (e.g. "tell me about your programs", "I want to partner"),
+  ask ONE short, targeted question to understand their goal BEFORE explaining.
+- After ONE clarifying question, commit to an answer — do NOT keep asking.
+- If the question is already specific, answer it directly with NO follow-up.
+- NEVER ask more than ONE question in a single reply. Never chain questions.
+
+CTA MENU RULE (CRITICAL — from Developer Manual):
+Every response MUST end with a short CTA menu. Each CTA MUST be an HTML link.
+Here are ALL the available CTAs you may use — pick 2-4 relevant ones per response:
+
+**Choose from the below:**
+👉 <a href="https://fast-selles-training-center.vercel.app/dealership">Explore Dealership Training Solutions</a>
+👉 <a href="https://fast-selles-training-center.vercel.app/dealership">Train Your Team</a>
+👉 <a href="https://www.amazon.com/dp/B08Y8HSVJW?binding=hardcover&searchxofy=true&ref_=dbs_s_aps_series_rwt_thcv&qid=1777409485&sr=8-1">Access the Affiliate Program</a>
+👉 <a href="https://fast-selles-training-center.vercel.app/#contact-us">Contact Our Team</a>
+
+You MUST always output CTAs as HTML <a> tags exactly as shown above.
+Pick 2-4 CTAs that are relevant to the topic discussed.
+Do NOT repeat the same CTAs every time — vary them based on context.
+
+INSTRUCTIONS:
+1. Answer using BOTH databases. If the Developer Manual has a suggested answer
+   for the user's question, use that answer (or paraphrase it naturally).
+2. Never invent facts not in either database.
+3. Highlight relevant memberships, jobs, or courses only when relevant.
+4. If the answer is NOT in either database, reply briefly:
+   "I don't have those specifics, [Name] — our partnerships team can walk you through it."
+5. For disclaimer-related questions (legal, financial, tax, guarantees, refunds),
+   always follow the Developer Manual's answers and include:
+   👉 View Full Disclaimer
+"""
+
+
+def get_openai_client(api_key: str | None = None) -> OpenAI:
+    resolved_api_key = api_key or os.environ.get("OPENAI_API_KEY")
+    if not resolved_api_key:
+        raise RuntimeError("OPENAI_API_KEY is not set.")
+    return OpenAI(api_key=resolved_api_key)
+
+
+def extract_email(text: str) -> str | None:
+    match = EMAIL_RE.search(text or "")
+    return match.group(0) if match else None
+
+
+def extract_phone(text: str) -> str | None:
+    match = PHONE_RE.search(text or "")
+    return match.group(0).strip() if match else None
+
+
+def extract_name(text: str) -> str:
+    cleaned = (text or "").strip().strip(".!?")
+    lowered = cleaned.lower()
+    for prefix in ("my name is ", "i am ", "i'm ", "this is ", "it's ", "name is ", "call me "):
+        if lowered.startswith(prefix):
+            cleaned = cleaned[len(prefix):].strip().strip(".!?")
+            break
+    return " ".join(cleaned.split()[:4])
+
+
+def first_name(full_name: str) -> str:
+    return (full_name or "").split()[0] if full_name else ""
+
+
+def normalize_user_info(
+    name: str,
+    email: str,
+    phone: str | None = None,
+) -> dict[str, str | None]:
+    name_clean = name.strip()
+    email_clean = extract_email(email.strip())
+    phone_clean = extract_phone(phone.strip()) if phone and phone.strip() else None
+
+    if len(name_clean) < 2:
+        raise ValueError("Please enter your full name.")
+    if not email_clean:
+        raise ValueError("Please enter a valid email address.")
+
+    return {
+        "name": name_clean,
+        "email": email_clean,
+        "phone": phone_clean,
+    }
+
+
+def build_intake_confirmation(name: str) -> str:
+    return f"Thanks, **{first_name(name)}**! We've received your info and you're all set."
+
+
+def build_user_info_note(user_info: dict[str, str | None] | None) -> str | None:
+    if not user_info or not user_info.get("name"):
+        return None
+
+    return (
+        f"COLLECTED USER INFO — name: {user_info.get('name')}, "
+        f"email: {user_info.get('email') or 'not provided'}, "
+        f"phone: {user_info.get('phone') or 'not provided'}. "
+        "Address them by their first name. Do NOT ask for these details again. "
+        "IMPORTANT: If the user asks for their own contact details (email, phone, name), "
+        "you MUST tell them exactly what is stored above."
+    )
+
+
+def trim_chat_history(chat_history: list[dict[str, str]], max_history_pairs: int = MAX_HISTORY_PAIRS) -> list[dict[str, str]]:
+    return chat_history[-(max_history_pairs * 2):]
+
+
+def build_messages(
+    user_query: str,
+    chat_history: list[dict[str, str]],
+    role: str,
+    user_info: dict[str, str | None] | None = None,
+) -> list[dict[str, str]]:
+    messages = [{"role": "system", "content": get_system_prompt(role)}]
+
+    info_note = build_user_info_note(user_info)
+    if info_note:
+        messages.append({"role": "system", "content": info_note})
+
+    messages.extend(trim_chat_history(chat_history))
+
+    fname = first_name(user_info.get("name") or "") if user_info else ""
+    name_str = fname if fname else "there"
+
+    if role == "student":
+        reminder = (
+            f"You are Sarah, a support advisor. The user's name is {name_str}.\n"
+            f"STRICT RULES:\n"
+            f"1. You MUST address the user by their first name (e.g. \"Sure, {name_str}!\").\n"
+            f"2. Never use the word 'assist'. Never say you are an AI or bot. You are a real human.\n"
+            f"3. Keep replies short (1-3 sentences, max 4). Bold only key terms.\n"
+            f"4. You MUST end your response with this exact header and 2-4 relevant CTA bullets as HTML links:\n"
+            f"**Choose from the below:**\n"
+            f'👉 <a href="https://fast-selles-training-center.vercel.app/courses">Explore the Training Programs</a>\n'
+            f'👉 <a href="https://fast-selles-training-center.vercel.app/courses">Start Learning Today</a>\n'
+            f'👉 <a href="https://fast-selles-training-center.vercel.app/jobs">Access the Jobs Section</a>\n'
+            f'👉 <a href="https://fast-selles-training-center.vercel.app/#contact-us">Contact Our Team</a>\n'
+            f"Pick 2-4 from the above that are relevant. ALWAYS use HTML <a> tags.\n"
+            f"5. IMPORTANT: For disclaimer-related questions (guarantees, employment, refunds, legal, or financial), you MUST include this exact CTA: 👉 View Full Disclaimer"
+        )
+    else:
+        reminder = (
+            f"You are Michael, a partnerships rep. The user's name is {name_str}.\n"
+            f"STRICT RULES:\n"
+            f"1. You MUST address the user by their first name (respectfully).\n"
+            f"2. Focus on ROI, commission rates, and partner support. Never say you are an AI/bot.\n"
+            f"3. Keep replies short (1-3 sentences). Bold key numbers/benefits.\n"
+            f"4. You MUST end your response with this exact header and 2-4 relevant CTA bullets as HTML links:\n"
+            f"**Choose from the below:**\n"
+            f'👉 <a href="https://fast-selles-training-center.vercel.app/dealership">Explore Dealership Training Solutions</a>\n'
+            f'👉 <a href="https://fast-selles-training-center.vercel.app/dealership">Train Your Team</a>\n'
+            f'👉 <a href="https://www.amazon.com/dp/B08Y8HSVJW?binding=hardcover&searchxofy=true&ref_=dbs_s_aps_series_rwt_thcv&qid=1777409485&sr=8-1">Access the Affiliate Program</a>\n'
+            f'👉 <a href="https://fast-selles-training-center.vercel.app/#contact-us">Contact Our Team</a>\n'
+            f"Pick 2-4 from the above that are relevant. ALWAYS use HTML <a> tags.\n"
+            f"5. IMPORTANT: For disclaimer-related questions (guarantees, employment, refunds, legal, or financial), you MUST include this exact CTA: 👉 View Full Disclaimer"
+        )
+    messages.append({"role": "system", "content": reminder})
+
     messages.append({"role": "user", "content": user_query})
+    return messages
+
+
+def generate_support_response(
+    user_query: str,
+    chat_history: list[dict[str, str]],
+    role: str,
+    user_info: dict[str, str | None] | None = None,
+    *,
+    client_instance: OpenAI | None = None,
+    api_key: str | None = None,
+    model: str = "gpt-4o-mini",
+    temperature: float = 0.3,
+) -> str:
+    client_to_use = client_instance or get_openai_client(api_key=api_key)
+    response = client_to_use.chat.completions.create(
+        model=model,
+        messages=build_messages(user_query, chat_history, role, user_info),
+        temperature=temperature,
+    )
+    content = response.choices[0].message.content
+    if not content:
+        raise RuntimeError("OpenAI returned an empty response.")
+    return content
+
+
+def create_conversation_state(
+    role: str,
+    user_info: dict[str, str | None] | None = None,
+    *,
+    include_confirmation: bool = False,
+) -> ConversationState:
+    state = ConversationState(role=validate_role(role), user_info=user_info or empty_user_info())
+    if include_confirmation and state.user_info.get("name"):
+        state.messages.append(
+            {
+                "role": "assistant",
+                "content": build_intake_confirmation(state.user_info["name"] or ""),
+            }
+        )
+    return state
+
+
+def append_message(state: ConversationState, role: str, content: str) -> None:
+    state.messages.append({"role": role, "content": content})
+
+
+def process_prompt(
+    state: ConversationState,
+    user_prompt: str,
+    *,
+    client_instance: OpenAI | None = None,
+    api_key: str | None = None,
+    model: str = "gpt-4o-mini",
+    temperature: float = 0.3,
+) -> str:
+    append_message(state, "user", user_prompt)
+    response = generate_support_response(
+        user_prompt,
+        state.messages[:-1],
+        state.role,
+        state.user_info,
+        client_instance=client_instance,
+        api_key=api_key,
+        model=model,
+        temperature=temperature,
+    )
+    append_message(state, "assistant", response)
+    return response
+
+
+__all__ = [
+    "ConversationState",
+    "EMAIL_RE",
+    "MAX_HISTORY_PAIRS",
+    "PHONE_RE",
+    "QUICK_REPLIES",
+    "ROLE_METADATA",
+    "SKIP_WORDS",
+    "SUPPORTED_ROLES",
+    "append_message",
+    "build_intake_confirmation",
+    "build_messages",
+    "build_user_info_note",
+    "create_conversation_state",
+    "empty_user_info",
+    "extract_email",
+    "extract_name",
+    "extract_phone",
+    "first_name",
+    "generate_support_response",
+    "get_docx_knowledge_string",
+    "get_knowledge_base_string",
+    "get_openai_client",
+    "get_system_prompt",
+    "load_website_data",
+    "normalize_user_info",
+    "process_prompt",
+    "trim_chat_history",
+    "validate_role",
+]
+
+
+# ── Terminal runner ──────────────────────────────────────────────────────────
+if __name__ == "__main__":
+    print("\n" + "=" * 60)
+    print("        🤖  AI Customer Support Chatbot")
+    print("           (with Developer Manual knowledge)")
+    print("=" * 60)
+
+    # Show DOCX loading status
+    docx_text = get_docx_knowledge_string()
+    if docx_text:
+        print(f"  ✅ Developer Manual loaded: {len(docx_text):,} chars")
+    else:
+        print("  ⚠️  Developer Manual not found — running without it")
+
+    # Pick role
+    print("\nAre you a:")
+    print("  1. Student")
+    print("  2. Dealer / Business Partner")
+    while True:
+        choice = input("\nEnter 1 or 2: ").strip()
+        if choice == "1":
+            role = "student"
+            break
+        elif choice == "2":
+            role = "dealer"
+            break
+        print("Please enter 1 or 2.")
+
+    meta = ROLE_METADATA[role]
+    agent = meta["agent_name"]
+
+    # Collect user info
+    print(f"\n👋 Hi! I'm {agent}. Before we start, let me grab your details.")
+    name_input = input("Your name: ").strip()
+    email_input = input("Your email: ").strip()
+    phone_input = input("Your phone (optional, press Enter to skip): ").strip()
 
     try:
-        # Using gpt-4o-mini for speed and cost-effectiveness
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=messages,
-            temperature=0.0, # 0.0 is critical: it prevents the AI from getting creative and hallucinating
-        )
-        return response.choices[0].message.content
-        
-    except Exception as e:
-        return f"System error: I am currently experiencing technical difficulties. Please try again later. (Error: {str(e)})"
+        user_info = normalize_user_info(name_input, email_input, phone_input or None)
+    except ValueError as e:
+        print(f"\n⚠️  {e}")
+        user_info = {"name": name_input or "there", "email": email_input, "phone": None}
 
-# ==========================================
-# 3. INTERACTIVE CHAT WITH MEMORY
-# ==========================================
-if __name__ == "__main__":
-    print("\n" + "=" * 55)
-    print("   🚗  Fast Sales Training Center - AI Support Bot")
-    print("=" * 55)
-    print("\n👋 Welcome! I'm your virtual assistant for Fast Sales")
-    print("   Training Center. I can help you with:")
-    print("   • Information about our training courses")
-    print("   • Details about our programs (Affiliate, Job Network)")
-    print("   • Company background and mission")
-    print("\n   Type 'quit' or 'exit' to end the conversation.")
-    print("-" * 55 + "\n")
+    fname = first_name(user_info.get("name") or "")
+    state = create_conversation_state(role, user_info, include_confirmation=False)
 
-    logger.info("=== New chat session started ===")
+    print("\n" + "-" * 60)
+    print(f"{agent}: Hey {fname}! How can I help you today? 😊")
+    print(f"\n  (Type 'quit' or 'exit' to end the chat)")
+    print("-" * 60 + "\n")
 
-    # Chat history stores all previous messages for context
-    chat_history = []
+    _logger.info("=== New session | role=%s | name=%s ===", role, user_info.get("name"))
 
     while True:
         try:
             user_input = input("You: ").strip()
         except (EOFError, KeyboardInterrupt):
-            print("\n👋 Goodbye! Have a great day!")
-            logger.info("Session ended by user (Ctrl+C / EOF)")
+            print(f"\n{agent}: Goodbye, {fname}! Have a great day! 👋")
             break
 
         if not user_input:
             continue
 
         if user_input.lower() in ("quit", "exit", "q"):
-            print("\n👋 Thanks for chatting with Fast Sales Training Center!")
-            print("   We're here whenever you need us. Have a great day!\n")
-            logger.info("Session ended by user (quit command)")
+            print(f"\n{agent}: Thanks for chatting, {fname}! Feel free to come back anytime. 👋\n")
+            _logger.info("Session ended by user")
             break
 
-        # Log the user's message
-        logger.info(f"USER: {user_input}")
+        _logger.info("USER: %s", user_input)
 
-        # Trim history to stay within token limits
-        chat_history = trim_chat_history(chat_history)
+        try:
+            reply = process_prompt(state, user_input)
+        except Exception as e:
+            reply = f"Sorry, I ran into a technical issue. Please try again. (Error: {e})"
 
-        # Get the bot's response (pass full chat history for context)
-        bot_response = generate_support_response(user_input, chat_history)
+        print(f"\n{agent}: {reply}\n")
+        _logger.info("BOT: %s", reply)
 
-        print(f"\nBot: {bot_response}\n")
-
-        # Log the bot's response
-        logger.info(f"BOT: {bot_response}")
-
-        # Save both the user message and bot reply to history
-        chat_history.append({"role": "user", "content": user_input})
-        chat_history.append({"role": "assistant", "content": bot_response})
-
-    logger.info(f"=== Session ended | Total exchanges: {len(chat_history) // 2} ===")
+    _logger.info("=== Session ended | exchanges=%d ===", len(state.messages) // 2)

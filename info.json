@@ -1,0 +1,388 @@
+{
+    "courses": [
+        {
+            "id": 14,
+            "title": "Digital Marketing Essentials for Beginners",
+            "slug": "digital-marketing-essentials-for-beginners",
+            "short_description": "Learn the fundamentals of digital marketing and grow brands online.",
+            "category": {
+                "id": 6,
+                "title": "Digital Marketing",
+                "slug": "digital-marketing",
+                "created_at": "2026-05-07T03:02:58.987125Z",
+                "updated_at": "2026-05-07T03:02:58.987133Z"
+            },
+            "price": "249.00",
+            "old_price": "500.00",
+            "description": "This course introduces the core concepts of digital marketing including social media marketing, SEO, content creation, email campaigns, and paid advertising strategies for beginners.",
+            "rating": "0.0",
+            "total_reviews": 0,
+            "total_students": 0,
+            "duration_hours": 10,
+            "total_modules": 14,
+            "skill_level": "Beginner",
+            "language": "English",
+            "thumbnail": "http://5d4f-103-186-20-8.ngrok-free.app/media/course/media/Digital_Marketing_Essentials.avif",
+            "preview_video_url": "https://youtube.com/digital-marketing-preview",
+            "access_duration": "Lifetime",
+            "max_students": null,
+            "updated_at": "2026-05-07T03:54:42.798459Z",
+            "is_published": true,
+            "learning_outcomes": [
+                {
+                    "id": 61,
+                    "text": "Understand the fundamentals of digital marketing",
+                    "order": 1,
+                    "created_at": "2026-05-07T03:54:42.811873Z",
+                    "updated_at": "2026-05-07T03:54:42.811877Z"
+                },
+                {
+                    "id": 62,
+                    "text": "Create effective social media and email campaigns",
+                    "order": 2,
+                    "created_at": "2026-05-07T03:54:42.814017Z",
+                    "updated_at": "2026-05-07T03:54:42.814021Z"
+                }
+            ],
+            "requirements": [
+                {
+                    "id": 40,
+                    "text": "No prior marketing experience required",
+                    "order": 1,
+                    "created_at": "2026-05-07T03:54:42.801666Z",
+                    "updated_at": "2026-05-07T03:54:42.801673Z"
+                },
+                {
+                    "id": 41,
+                    "text": "Basic computer and internet knowledge",
+                    "order": 2,
+                    "created_at": "2026-05-07T03:54:42.803376Z",
+                    "updated_at": "2026-05-07T03:54:42.803381Z"
+                }
+            ],
+            "includes": [
+                {
+                    "id": 60,
+                    "text": "10 hours video content",
+                    "icon": "clock",
+                    "order": 1,
+                    "created_at": "2026-05-07T03:54:42.806929Z",
+                    "updated_at": "2026-05-07T03:54:42.806936Z"
+                },
+                {
+                    "id": 61,
+                    "text": "Marketing templates and downloadable guides",
+                    "icon": "file",
+                    "order": 2,
+                    "created_at": "2026-05-07T03:54:42.808718Z",
+                    "updated_at": "2026-05-07T03:54:42.808722Z"
+                }
+            ],
+            "modules": [
+                {
+                    "id": 26,
+                    "title": "Module 1: Introduction to Digital Marketing",
+                    "order": 1,
+                    "total_lessons": 2,
+                    "total_duration": "2 lessons",
+                    "lessons": [
+                        {
+                            "id": 47,
+                            "title": "Welcome to the Course",
+                            "lesson_type": "VIDEO",
+                            "duration": "6:20",
+                            "order": 1,
+                            "is_preview": true,
+                            "description": "Overview of the course structure and learning goals.",
+                            "what_you_will_learn": "Digital marketing basics\nOnline branding fundamentals",
+                            "learning_points": [
+                                "Digital marketing basics",
+                                "Online branding fundamentals"
+                            ],
+                            "resources": [],
+                            "quiz": null,
+                            "video": {
+                                "video_file": null,
+                                "video_file_url": null,
+                                "video_url": "https://youtube.com/digital-marketing-preview",
+                                "is_hls": false
+                            },
+                            "created_at": "2026-05-07T03:54:42.819403Z",
+                            "updated_at": "2026-05-07T03:54:42.819407Z"
+                        },
+                        {
+                            "id": 48,
+                            "title": "Understanding Online Marketing Channels",
+                            "lesson_type": "VIDEO",
+                            "duration": "9:10",
+                            "order": 2,
+                            "is_preview": false,
+                            "description": "Learn about SEO, social media, email marketing, and paid ads.",
+                            "what_you_will_learn": "",
+                            "learning_points": [],
+                            "resources": [
+                                {
+                                    "id": 3,
+                                    "title": "Digital_Marketing_Guide.pdf",
+                                    "resource_file": 3,
+                                    "file_url": "http://5d4f-103-186-20-8.ngrok-free.app/media/course/media/Digital_Marketing_Guide.pdf",
+                                    "file_size_bytes": 191579,
+                                    "file_size_display": "187 KB",
+                                    "order": 1,
+                                    "created_at": "2026-05-07T03:54:42.824909Z",
+                                    "updated_at": "2026-05-07T03:54:42.824913Z"
+                                }
+                            ],
+                            "quiz": null,
+                            "video": {
+                                "video_file": 2,
+                                "video_file_url": "http://5d4f-103-186-20-8.ngrok-free.app/media/course/media/Digital_Marketing_Video.mp4",
+                                "video_url": null,
+                                "is_hls": false
+                            },
+                            "created_at": "2026-05-07T03:54:42.822265Z",
+                            "updated_at": "2026-05-07T03:54:42.822268Z"
+                        }
+                    ],
+                    "created_at": "2026-05-07T03:54:42.817457Z",
+                    "updated_at": "2026-05-07T03:54:42.817464Z"
+                },
+                {
+                    "id": 27,
+                    "title": "Module 5: Social Media Marketing Strategies",
+                    "order": 5,
+                    "total_lessons": 2,
+                    "total_duration": "2 lessons",
+                    "lessons": [
+                        {
+                            "id": 49,
+                            "title": "Building a Social Media Campaign",
+                            "lesson_type": "VIDEO",
+                            "duration": "12:30",
+                            "order": 1,
+                            "is_preview": false,
+                            "description": "",
+                            "what_you_will_learn": "",
+                            "learning_points": [],
+                            "resources": [],
+                            "quiz": null,
+                            "video": {
+                                "video_file": 4,
+                                "video_file_url": "http://5d4f-103-186-20-8.ngrok-free.app/media/course/media/Building_a_social_media_campaign.mp4",
+                                "video_url": null,
+                                "is_hls": false
+                            },
+                            "created_at": "2026-05-07T03:54:42.833624Z",
+                            "updated_at": "2026-05-07T03:54:42.833631Z"
+                        },
+                        {
+                            "id": 50,
+                            "title": "Quiz: Social Media Marketing",
+                            "lesson_type": "QUIZ",
+                            "duration": "12:00",
+                            "order": 2,
+                            "is_preview": false,
+                            "description": "",
+                            "what_you_will_learn": "",
+                            "learning_points": [],
+                            "resources": [],
+                            "quiz": {
+                                "id": 11,
+                                "title": "Social Media Marketing Fundamentals Quiz",
+                                "pass_score": 75,
+                                "total_questions": 1,
+                                "questions": [
+                                    {
+                                        "id": 15,
+                                        "text": "What is the main purpose of engagement on social media?",
+                                        "order": 1,
+                                        "choices": [
+                                            {
+                                                "id": 39,
+                                                "label": "A",
+                                                "text": "To increase audience interaction and brand awareness",
+                                                "created_at": "2026-05-07T03:54:42.844274Z",
+                                                "updated_at": "2026-05-07T03:54:42.844283Z"
+                                            },
+                                            {
+                                                "id": 40,
+                                                "label": "B",
+                                                "text": "To reduce website traffic",
+                                                "created_at": "2026-05-07T03:54:42.847110Z",
+                                                "updated_at": "2026-05-07T03:54:42.847122Z"
+                                            },
+                                            {
+                                                "id": 41,
+                                                "label": "C",
+                                                "text": "To avoid customer communication",
+                                                "created_at": "2026-05-07T03:54:42.849622Z",
+                                                "updated_at": "2026-05-07T03:54:42.849632Z"
+                                            }
+                                        ],
+                                        "created_at": "2026-05-07T03:54:42.841629Z",
+                                        "updated_at": "2026-05-07T03:54:42.841637Z"
+                                    }
+                                ],
+                                "created_at": "2026-05-07T03:54:42.839027Z",
+                                "updated_at": "2026-05-07T03:54:42.839035Z"
+                            },
+                            "video": null,
+                            "created_at": "2026-05-07T03:54:42.836361Z",
+                            "updated_at": "2026-05-07T03:54:42.836367Z"
+                        }
+                    ],
+                    "created_at": "2026-05-07T03:54:42.830947Z",
+                    "updated_at": "2026-05-07T03:54:42.830955Z"
+                }
+            ],
+            "reviews": [],
+            "review_stats": {
+                "1": 0,
+                "2": 0,
+                "3": 0,
+                "4": 0,
+                "5": 0
+            },
+            "scorm_package": null,
+            "enrollment_count": 0,
+            "status": "published",
+            "share_url": "/courses/14/"
+        }
+    ],
+    "categories": [
+        {
+            "id": 1,
+            "title": "Automotive Sales",
+            "slug": "automotive-sales"
+        },
+        {
+            "id": 2,
+            "title": "F&I",
+            "slug": "fi"
+        },
+        {
+            "id": 3,
+            "title": "Sales Skills",
+            "slug": "sales-skills"
+        },
+        {
+            "id": 4,
+            "title": "EV/Hybrid",
+            "slug": "ev-hybrid"
+        },
+        {
+            "id": 5,
+            "title": "Brokerage",
+            "slug": "brokerage"
+        }
+    ],
+    "faqs": [
+        {
+            "id": 1,
+            "question": "How long do I have access to individual courses?",
+            "answer": "You have access to individual courses for 3 months from the date of purchase. After that, you can renew access at a discounted rate."
+        },
+        {
+            "id": 2,
+            "question": "Is there any refund policy?",
+            "answer": "Yes. We offer a 30-day money-back guarantee if you are not satisfied with the course content."
+        },
+        {
+            "id": 3,
+            "question": "Can I upgrade or downgrade my plan?",
+            "answer": "Absolutely. You can upgrade or downgrade your subscription at any time from your account settings."
+        }
+    ],
+    "memberships": [
+        {
+            "id": 7,
+            "name": "Basic",
+            "target_audience": "dealer",
+            "badge": "25+ employees",
+            "tagline": "Start with the fundamentals",
+            "monthly_price": "50.00",
+            "annual_price": "40.00",
+            "cta_text": "Try for free",
+            "is_custom_price": false,
+            "highlight_first_feature": false,
+            "has_contact_link": false,
+            "is_popular": true,
+            "features": [
+                "Access to ALL courses for team",
+                "Private community group",
+                "Custom training curriculum",
+                "Unlimited 1-on-1 coaching",
+                "Custom sales scripts",
+                "Dedicated account manager"
+            ]
+        }
+    ],
+    "jobs": [
+        {
+            "id": 4,
+            "posted_by_name": "Bornali Saha",
+            "approved_by_name": null,
+            "title": "DevOps Engineer",
+            "department": "Infrastructure & Operations",
+            "location": "Remote",
+            "employment_type": "Contract",
+            "job_status": "active",
+            "salary_range": "$3,000 - $5,000 USD",
+            "company_name": "Global Tech Hub",
+            "application_deadline": "2026-06-30",
+            "experience": "4-6 years",
+            "required_skills": [
+                "Docker",
+                "Nginx",
+                "CI/CD Pipelines",
+                "Kubernetes",
+                "Terraform",
+                "PostgreSQL"
+            ],
+            "description": "We are seeking a DevOps Engineer to manage our automated deployment pipelines and optimize server performance. You will be instrumental in scaling our Django-based applications using Nginx and Docker.",
+            "requirements": [
+                "Strong experience with Nginx configuration and SSL management.",
+                "Proficiency in managing PostgreSQL database migrations and backups.",
+                "Experience with cloud infrastructure (AWS/DigitalOcean).",
+                "Familiarity with containerization and orchestration tools."
+            ],
+            "benefits": [
+                "Work from anywhere in the world.",
+                "Performance-based bonuses paid in USD.",
+                "Subsidized high-speed internet and home office setup.",
+                "Flexible paid time off (PTO)."
+            ],
+            "contact_email": "infra-team@globaltech.io",
+            "contact_phone": "+14155550101",
+            "additional_instructions": "Submit a link to a GitHub repository or a portfolio demonstrating your infrastructure-as-code (IaC) skills.",
+            "approval_status": "pending",
+            "rejection_reason": "",
+            "created_at": "2026-05-09T03:44:25.512951Z",
+            "updated_at": "2026-05-09T03:44:25.512959Z",
+            "approved_at": null,
+            "posted_by": 42,
+            "approved_by": null
+        }
+    ],
+    "books": [
+        {
+            "id": 1,
+            "title": "Automotive Engineering: A Practical Approach",
+            "description": "A comprehensive guide to modern vehicle systems, covering everything from internal combustion engines to EV architecture.",
+            "cover_image": 6,
+            "cover_image_url": "http://6ba9-103-186-20-8.ngrok-free.app/media/course/media/Auto_FI_manager.jpeg",
+            "affiliate_url": "https://www.amazon.com/automotive-engineering-book/dp/B00EXAMPLE",
+            "is_active": true,
+            "created_at": "2026-05-11T03:40:41.653444Z",
+            "updated_at": "2026-05-11T03:40:41.653451Z"
+        }
+    ],
+    "privacy_policy": {
+        "id": 1,
+        "content": "<p>This is the static Privacy Policy content.</p>"
+    },
+    "terms_conditions": {
+        "id": 1,
+        "content": "<p>This is the static Terms & Conditions content.</p>"
+    }
+}
