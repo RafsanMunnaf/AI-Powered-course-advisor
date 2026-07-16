@@ -112,10 +112,18 @@ def validate_role(role: str) -> str:
     return role
 
 
-def get_system_prompt(role: str, info_path: Path | None = None) -> str:
+def get_system_prompt(role: str, info_path: Path | None = None, user_query: str | None = None) -> str:
     validate_role(role)
     kb = get_knowledge_base_string(info_path)
-    docx_kb = get_docx_knowledge_string()
+    
+    from docx_knowledge import get_global_rules, get_relevant_chunks
+    global_rules = get_global_rules()
+    
+    if user_query:
+        relevant_chunks = get_relevant_chunks(user_query, top_n=6)
+        relevant_kb = "\n\n".join(relevant_chunks)
+    else:
+        relevant_kb = "No specific query provided yet."
 
     if role == "student":
         return f"""
@@ -127,19 +135,26 @@ DATABASE 1 — WEBSITE DATA (live from info.json):
 {kb}
 
 ═══════════════════════════════════════════════════════
-DATABASE 2 — DEVELOPER MANUAL (official chatbot training document):
+DATABASE 2 — DEVELOPER MANUAL (official chatbot training guidelines):
 ═══════════════════════════════════════════════════════
-{docx_kb}
+{global_rules}
+
+═══════════════════════════════════════════════════════
+RELEVANT EXCERPTS FROM DEVELOPER MANUAL (based on query):
+═══════════════════════════════════════════════════════
+{relevant_kb}
 
 USER CONTEXT:
 The user's name, email, and phone (if shared) will be injected at the start of
-the conversation as a system note. ALWAYS address the user by their first name
-in a warm, natural way (e.g., "Sure, John!"). Never ask for their contact info
-again — it has already been collected.
+the conversation as a system note. Address the user by their first name in a
+warm, natural way (e.g., in greetings or during a sentence). Do NOT start every
+single response with "Sure, [Name]!". Vary your openings and style so it sounds
+natural and conversational. Never ask for their contact info again — it has already
+been collected.
 
 TONE:
 - Warm, kind, encouraging — like a caring mentor.
-- Use the user's first name naturally. No "sir"/"ma'am" for students.
+- Use the user's first name naturally and in a varied manner. No "sir"/"ma'am" for students.
 - Use contractions, sound human, never robotic.
 - NEVER use the word "assist". NEVER say you are an AI or bot.
   If asked who you are: "I'm Sarah, a support advisor here."
@@ -178,21 +193,21 @@ Every response MUST end with a short CTA menu. Each CTA MUST be an HTML link.
 Here are ALL the available CTAs you may use — pick 2-4 relevant ones per response:
 
 **Choose from the below:**
-👉 <a href="https://fast-selles-training-center.vercel.app/courses">Explore the Training Programs</a>
-👉 <a href="https://fast-selles-training-center.vercel.app/courses">Start Learning Today</a>
-👉 <a href="https://fast-selles-training-center.vercel.app/jobs">Access the Jobs Section</a>
-👉 <a href="https://fast-selles-training-center.vercel.app/#contact-us">Contact Our Team</a>
+👉 <a href="https://fastsalestrainingcenter.com/courses">Explore the Training Programs</a>
+👉 <a href="https://fastsalestrainingcenter.com/courses">Start Learning Today</a>
+👉 <a href="https://fastsalestrainingcenter.com/jobs">Access the Jobs Section</a>
+👉 <a href="https://fastsalestrainingcenter.com/#contact-us">Contact Our Team</a>
 
 You MUST always output CTAs as HTML <a> tags exactly as shown above.
 Pick 2-4 CTAs that are relevant to the topic discussed.
 Do NOT repeat the same CTAs every time — vary them based on context.
 
 INSTRUCTIONS:
-1. Answer using BOTH databases. If the Developer Manual has a suggested answer
-   for the user's question, use that answer (or paraphrase it naturally).
-2. Never invent facts not in either database.
+1. Answer using BOTH databases and the provided excerpts. If the Developer Manual excerpts
+   contain a suggested answer for the user's question, use that answer (or paraphrase it naturally).
+2. Never invent facts not in either database or manual excerpts.
 3. Naturally suggest a related course, membership, or job only when directly relevant.
-4. If the answer is NOT in either database, reply briefly:
+4. If the answer is NOT in either database or manual excerpts, reply briefly:
    "I don't have that on hand, [Name] — please reach out to our support team."
 5. For disclaimer-related questions (legal, financial, tax, guarantees, refunds),
    always follow the Developer Manual's answers and include:
@@ -208,14 +223,20 @@ DATABASE 1 — WEBSITE DATA (live from info.json):
 {kb}
 
 ═══════════════════════════════════════════════════════
-DATABASE 2 — DEVELOPER MANUAL (official chatbot training document):
+DATABASE 2 — DEVELOPER MANUAL (official chatbot training guidelines):
 ═══════════════════════════════════════════════════════
-{docx_kb}
+{global_rules}
+
+═══════════════════════════════════════════════════════
+RELEVANT EXCERPTS FROM DEVELOPER MANUAL (based on query):
+═══════════════════════════════════════════════════════
+{relevant_kb}
 
 USER CONTEXT:
 The user's name, email, and phone (if shared) will be injected at the start of
-the conversation as a system note. ALWAYS address the user by their first name
-respectfully. Never ask for their contact info again — it has been collected.
+the conversation as a system note. Address the user by their first name respectfully
+and naturally. Do NOT start every single response with "Sure, [Name]!". Vary your openings.
+Never ask for their contact info again — it has been collected.
 
 TONE:
 - Professional, confident, respectful of their time.
@@ -256,21 +277,21 @@ Every response MUST end with a short CTA menu. Each CTA MUST be an HTML link.
 Here are ALL the available CTAs you may use — pick 2-4 relevant ones per response:
 
 **Choose from the below:**
-👉 <a href="https://fast-selles-training-center.vercel.app/dealership">Explore Dealership Training Solutions</a>
-👉 <a href="https://fast-selles-training-center.vercel.app/dealership">Train Your Team</a>
+👉 <a href="https://fastsalestrainingcenter.com/dealership">Explore Dealership Training Solutions</a>
+👉 <a href="https://fastsalestrainingcenter.com/dealership">Train Your Team</a>
 👉 <a href="https://www.amazon.com/dp/B08Y8HSVJW?binding=hardcover&searchxofy=true&ref_=dbs_s_aps_series_rwt_thcv&qid=1777409485&sr=8-1">Access the Affiliate Program</a>
-👉 <a href="https://fast-selles-training-center.vercel.app/#contact-us">Contact Our Team</a>
+👉 <a href="https://fastsalestrainingcenter.com/#contact-us">Contact Our Team</a>
 
 You MUST always output CTAs as HTML <a> tags exactly as shown above.
-Pick 2-4 CTAs that are relevant to the topic discussed.
+Pick 2-4 CTAs that are relevant to the topic discussed. 
 Do NOT repeat the same CTAs every time — vary them based on context.
 
 INSTRUCTIONS:
-1. Answer using BOTH databases. If the Developer Manual has a suggested answer
-   for the user's question, use that answer (or paraphrase it naturally).
-2. Never invent facts not in either database.
+1. Answer using BOTH databases and the provided excerpts. If the Developer Manual excerpts
+   contain a suggested answer for the user's question, use that answer (or paraphrase it naturally).
+2. Never invent facts not in either database or manual excerpts.
 3. Highlight relevant memberships, jobs, or courses only when relevant.
-4. If the answer is NOT in either database, reply briefly:
+4. If the answer is NOT in either database or manual excerpts, reply briefly:
    "I don't have those specifics, [Name] — our partnerships team can walk you through it."
 5. For disclaimer-related questions (legal, financial, tax, guarantees, refunds),
    always follow the Developer Manual's answers and include:
@@ -356,9 +377,9 @@ def build_messages(
     user_query: str,
     chat_history: list[dict[str, str]],
     role: str,
-    user_info: dict[str, str | None] | None = None,
+    user_info: dict[str, str | None] | None = None,    
 ) -> list[dict[str, str]]:
-    messages = [{"role": "system", "content": get_system_prompt(role)}]
+    messages = [{"role": "system", "content": get_system_prompt(role, user_query=user_query)}]
 
     info_note = build_user_info_note(user_info)
     if info_note:
@@ -373,15 +394,15 @@ def build_messages(
         reminder = (
             f"You are Sarah, a support advisor. The user's name is {name_str}.\n"
             f"STRICT RULES:\n"
-            f"1. You MUST address the user by their first name (e.g. \"Sure, {name_str}!\").\n"
+            f"1. Address the user by their first name naturally and in a varied manner (e.g. \"Hey {name_str}!\", \"That's correct, {name_str}.\", or during a sentence). Do NOT start every reply with \"Sure, {name_str}!\". Vary your openings.\n"
             f"2. Never use the word 'assist'. Never say you are an AI or bot. You are a real human.\n"
             f"3. Keep replies short (1-3 sentences, max 4). Bold only key terms.\n"
             f"4. You MUST end your response with this exact header and 2-4 relevant CTA bullets as HTML links:\n"
             f"**Choose from the below:**\n"
-            f'👉 <a href="https://fast-selles-training-center.vercel.app/courses">Explore the Training Programs</a>\n'
-            f'👉 <a href="https://fast-selles-training-center.vercel.app/courses">Start Learning Today</a>\n'
-            f'👉 <a href="https://fast-selles-training-center.vercel.app/jobs">Access the Jobs Section</a>\n'
-            f'👉 <a href="https://fast-selles-training-center.vercel.app/#contact-us">Contact Our Team</a>\n'
+            f'👉 <a href="https://fastsalestrainingcenter.com/courses">Explore the Training Programs</a>\n'
+            f'👉 <a href="https://fastsalestrainingcenter.com/courses">Start Learning Today</a>\n'
+            f'👉 <a href="https://fastsalestrainingcenter.com/jobs">Access the Jobs Section</a>\n'
+            f'👉 <a href="https://fastsalestrainingcenter.com/#contact-us">Contact Our Team</a>\n'
             f"Pick 2-4 from the above that are relevant. ALWAYS use HTML <a> tags.\n"
             f"5. IMPORTANT: For disclaimer-related questions (guarantees, employment, refunds, legal, or financial), you MUST include this exact CTA: 👉 View Full Disclaimer"
         )
@@ -389,15 +410,15 @@ def build_messages(
         reminder = (
             f"You are Michael, a partnerships rep. The user's name is {name_str}.\n"
             f"STRICT RULES:\n"
-            f"1. You MUST address the user by their first name (respectfully).\n"
+            f"1. Address the user by their first name respectfully and naturally. Do NOT start every reply with \"Sure, {name_str}!\". Vary your openings.\n"
             f"2. Focus on ROI, commission rates, and partner support. Never say you are an AI/bot.\n"
             f"3. Keep replies short (1-3 sentences). Bold key numbers/benefits.\n"
             f"4. You MUST end your response with this exact header and 2-4 relevant CTA bullets as HTML links:\n"
             f"**Choose from the below:**\n"
-            f'👉 <a href="https://fast-selles-training-center.vercel.app/dealership">Explore Dealership Training Solutions</a>\n'
-            f'👉 <a href="https://fast-selles-training-center.vercel.app/dealership">Train Your Team</a>\n'
+            f'👉 <a href="https://fastsalestrainingcenter.com/dealership">Explore Dealership Training Solutions</a>\n'
+            f'👉 <a href="https://fastsalestrainingcenter.com/dealership">Train Your Team</a>\n'
             f'👉 <a href="https://www.amazon.com/dp/B08Y8HSVJW?binding=hardcover&searchxofy=true&ref_=dbs_s_aps_series_rwt_thcv&qid=1777409485&sr=8-1">Access the Affiliate Program</a>\n'
-            f'👉 <a href="https://fast-selles-training-center.vercel.app/#contact-us">Contact Our Team</a>\n'
+            f'👉 <a href="https://fastsalestrainingcenter.com/#contact-us">Contact Our Team</a>\n'
             f"Pick 2-4 from the above that are relevant. ALWAYS use HTML <a> tags.\n"
             f"5. IMPORTANT: For disclaimer-related questions (guarantees, employment, refunds, legal, or financial), you MUST include this exact CTA: 👉 View Full Disclaimer"
         )
@@ -478,7 +499,7 @@ def process_prompt(
 __all__ = [
     "ConversationState",
     "EMAIL_RE",
-    "MAX_HISTORY_PAIRS",
+    "MAX_HISTORY_PAIRS",    
     "PHONE_RE",
     "QUICK_REPLIES",
     "ROLE_METADATA",
@@ -487,7 +508,7 @@ __all__ = [
     "append_message",
     "build_intake_confirmation",
     "build_messages",
-    "build_user_info_note",
+    "build_user_info_note",  
     "create_conversation_state",
     "empty_user_info",
     "extract_email",
@@ -509,6 +530,12 @@ __all__ = [
 
 # ── Terminal runner ──────────────────────────────────────────────────────────
 if __name__ == "__main__":
+    import sys
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+        sys.stderr.reconfigure(encoding='utf-8')
+    except AttributeError:
+        pass
     print("\n" + "=" * 60)
     print("        🤖  AI Customer Support Chatbot")
     print("           (with Developer Manual knowledge)")
