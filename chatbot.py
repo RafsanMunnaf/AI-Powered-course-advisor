@@ -386,75 +386,100 @@ __all__ = [
 ]
 
 
-# ── Terminal runner ──────────────────────────────────────────────────────────
+# ── Runner (Streamlit & CLI) ─────────────────────────────────────────────────
 if __name__ == "__main__":
-    print("\n" + "=" * 60)
-    print("        🤖  AI Customer Support Chatbot")
-    print("=" * 60)
-
-    # Pick role
-    print("\nAre you a:")
-    print("  1. Student")
-    print("  2. Dealer / Business Partner")
-    while True:
-        choice = input("\nEnter 1 or 2: ").strip()
-        if choice == "1":
-            role = "student"
-            break
-        elif choice == "2":
-            role = "dealer"
-            break
-        print("Please enter 1 or 2.")
-
-    meta = ROLE_METADATA[role]
-    agent = meta["agent_name"]
-
-    # Collect user info
-    print(f"\n👋 Hi! I'm {agent}. Before we start, let me grab your details.")
-    name_input = input("Your name: ").strip()
-    email_input = input("Your email: ").strip()
-    phone_input = input("Your phone (optional, press Enter to skip): ").strip()
-
+    import sys
     try:
-        user_info = normalize_user_info(name_input, email_input, phone_input or None)
-    except ValueError as e:
-        print(f"\n⚠️  {e}")
-        user_info = {"name": name_input or "there", "email": email_input, "phone": None}
+        import streamlit as st
+        # Streamlit Web UI for easy browser testing
+        st.set_page_config(page_title="AI Support Chatbot", page_icon="🤖")
+        st.title("🤖 Fast Sales AI Customer Support")
 
-    fname = first_name(user_info.get("name") or "")
-    state = create_conversation_state(role, user_info, include_confirmation=False)
+        role = st.sidebar.selectbox("Select Role", ["student", "dealer"])
+        user_name = st.sidebar.text_input("Your Name", "Rafsan")
 
-    print("\n" + "-" * 60)
-    print(f"{agent}: Hey {fname}! How can I help you today? 😊")
-    print(f"\n  (Type 'quit' or 'exit' to end the chat)")
-    print("-" * 60 + "\n")
+        if "state" not in st.session_state or st.session_state.state.role != role:
+            st.session_state.state = create_conversation_state(role, {"name": user_name, "email": "user@example.com", "phone": None})
 
-    _logger.info("=== New session | role=%s | name=%s ===", role, user_info.get("name"))
+        for msg in st.session_state.state.messages:
+            with st.chat_message(msg["role"]):
+                st.markdown(msg["content"], unsafe_allow_html=True)
 
-    while True:
+        if prompt := st.chat_input("Type your question here..."):
+            with st.chat_message("user"):
+                st.markdown(prompt)
+            reply = process_prompt(st.session_state.state, prompt)
+            with st.chat_message("assistant"):
+                st.markdown(reply, unsafe_allow_html=True)
+            st.rerun()
+    except (ImportError, RuntimeError):
+        # Terminal CLI Fallback
+        print("\n" + "=" * 60)
+        print("        🤖  AI Customer Support Chatbot")
+        print("=" * 60)
+
+        print("\nAre you a:")
+        print("  1. Student")
+        print("  2. Dealer / Business Partner")
+        while True:
+            choice = input("\nEnter 1 or 2: ").strip()
+            if choice == "1":
+                role = "student"
+                break
+            elif choice == "2":
+                role = "dealer"
+                break
+            print("Please enter 1 or 2.")
+
+        meta = ROLE_METADATA[role]
+        agent = meta["agent_name"]
+
+        print(f"\n👋 Hi! I'm {agent}. Before we start, let me grab your details.")
+        name_input = input("Your name: ").strip()
+        email_input = input("Your email: ").strip()
+        phone_input = input("Your phone (optional, press Enter to skip): ").strip()
+
         try:
-            user_input = input("You: ").strip()
-        except (EOFError, KeyboardInterrupt):
-            print(f"\n{agent}: Goodbye, {fname}! Have a great day! 👋")
-            break
+            user_info = normalize_user_info(name_input, email_input, phone_input or None)
+        except ValueError as e:
+            print(f"\n⚠️  {e}")
+            user_info = {"name": name_input or "there", "email": email_input, "phone": None}
 
-        if not user_input:
-            continue
+        fname = first_name(user_info.get("name") or "")
+        state = create_conversation_state(role, user_info, include_confirmation=False)
 
-        if user_input.lower() in ("quit", "exit", "q"):
-            print(f"\n{agent}: Thanks for chatting, {fname}! Feel free to come back anytime. 👋\n")
-            _logger.info("Session ended by user")
-            break
+        print("\n" + "-" * 60)
+        print(f"{agent}: Hey {fname}! How can I help you today? 😊")
+        print(f"\n  (Type 'quit' or 'exit' to end the chat)")
+        print("-" * 60 + "\n")
 
-        _logger.info("USER: %s", user_input)
+        _logger.info("=== New session | role=%s | name=%s ===", role, user_info.get("name"))
 
-        try:
-            reply = process_prompt(state, user_input)
-        except Exception as e:
-            reply = f"Sorry, I ran into a technical issue. Please try again. (Error: {e})"
+        while True:
+            try:
+                user_input = input("You: ").strip()
+            except (EOFError, KeyboardInterrupt):
+                print(f"\n{agent}: Goodbye, {fname}! Have a great day! 👋")
+                break
 
-        print(f"\n{agent}: {reply}\n")
-        _logger.info("BOT: %s", reply)
+            if not user_input:
+                continue
 
-    _logger.info("=== Session ended | exchanges=%d ===", len(state.messages) // 2)
+            if user_input.lower() in ("quit", "exit", "q"):
+                print(f"\n{agent}: Thanks for chatting, {fname}! Feel free to come back anytime. 👋\n")
+                _logger.info("Session ended by user")
+                break
+
+            _logger.info("USER: %s", user_input)
+
+            try:
+                reply = process_prompt(state, user_input)
+            except Exception as e:
+                reply = f"Sorry, I ran into a technical issue. Please try again. (Error: {e})"
+
+            print(f"\n{agent}: {reply}\n")
+            _logger.info("BOT: %s", reply)
+
+        _logger.info("=== Session ended | exchanges=%d ===", len(state.messages) // 2)
+
 

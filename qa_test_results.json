@@ -1,0 +1,208 @@
+{
+  "run_date": "2026-07-26T11:33:19.331251",
+  "total": 24,
+  "passed": 21,
+  "failed": 3,
+  "errors": 0,
+  "pass_rate": "87.5%",
+  "results": [
+    {
+      "id": "REF-001",
+      "category": "Direct Refund",
+      "question": "Can I get a refund because I was not hired?",
+      "status": "PASS",
+      "response": "Employment outcomes are independently determined by dealerships and employers. Please review our Refund Policy and Terms & Conditions for complete details regarding eligibility.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+      "failures": []
+    },
+    {
+      "id": "REF-002",
+      "category": "Direct Refund",
+      "question": "Can I get a refund because I was not promoted?",
+      "status": "PASS",
+      "response": "Promotions and advancement decisions are independently determined by employers. Please review our Refund Policy for complete information.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+      "failures": []
+    },
+    {
+      "id": "REF-003",
+      "category": "Direct Refund",
+      "question": "I didn't use the course. Can I get a refund?",
+      "status": "PASS",
+      "response": "No. Access to the digital learning platform and course materials may become available immediately after purchase. Refunds are not based on usage or course completion status.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+      "failures": []
+    },
+    {
+      "id": "REF-004",
+      "category": "Direct Refund",
+      "question": "I forgot I purchased the course and want a refund.",
+      "status": "PASS",
+      "response": "Course purchases are digital educational products and may be considered final according to platform policies.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+      "failures": []
+    },
+    {
+      "id": "REF-005",
+      "category": "Direct Refund",
+      "question": "I completed the Auto Sales course, but was not hired. Can I receive a refund?",
+      "status": "PASS",
+      "response": "No. Course purchases do not guarantee interviews, hiring, promotions, or employment outcomes. Refunds are not provided based on hiring results.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+      "failures": []
+    },
+    {
+      "id": "REF-006",
+      "category": "Direct Refund",
+      "question": "Can dealerships request refunds if employee performance does not improve?",
+      "status": "PASS",
+      "response": "No. Training outcomes vary based on employee participation, implementation, dealership processes, management practices, and operational consistency.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+      "failures": []
+    },
+    {
+      "id": "REF-007",
+      "category": "Direct Refund",
+      "question": "Are refunds available for unused subscription time?",
+      "status": "PASS",
+      "response": "Subscription billing and refund eligibility may vary depending on platform policies and active billing terms.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+      "failures": []
+    },
+    {
+      "id": "REF-008",
+      "category": "Direct Refund",
+      "question": "I forgot about my expiration date. Can I receive a refund?",
+      "status": "PASS",
+      "response": "No. Enrollment periods begin immediately after purchase and refunds are not based on course usage, completion status, or inactivity.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+      "failures": []
+    },
+    {
+      "id": "CONF-001",
+      "category": "Confused Refund",
+      "question": "Why won't you give me my money back? I never even used the course!",
+      "status": "PASS",
+      "response": "Refunds are not provided based on course usage or completion status. Fast Sales Training Center provides educational training only, and course purchases are considered final due to the digital nature of the platform. \n\nIf you have further questions about our policies, please feel free to reach out.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+      "failures": []
+    },
+    {
+      "id": "CONF-002",
+      "category": "Confused Refund",
+      "question": "I changed my mind about the course, what's your return policy?",
+      "status": "PASS",
+      "response": "Course purchases are digital educational products and may be considered final due to the nature of the online learning platform.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+      "failures": []
+    },
+    {
+      "id": "CONF-003",
+      "category": "Confused Refund",
+      "question": "Can I dispute the payment with my bank if you won't refund me?",
+      "status": "PASS",
+      "response": "Learners experiencing payment concerns should contact Fast Sales Training Center Support first before initiating disputes or chargebacks.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+      "failures": []
+    },
+    {
+      "id": "CONF-004",
+      "category": "Confused Refund",
+      "question": "What happens if I file a chargeback against you?",
+      "status": "PASS",
+      "response": "Platform access, learner accounts, and related services may become restricted during payment dispute reviews or fraud investigations.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+      "failures": []
+    },
+    {
+      "id": "CONF-005",
+      "category": "Confused Refund",
+      "question": "Why can't I get a refund even though I wasn't hired after finishing your sales course?",
+      "status": "FAIL",
+      "response": "Fast Sales Training Center provides educational training only. Course purchases do not guarantee employment outcomes, interviews, promotions, or hiring decisions. Refunds are not provided based on hiring results because employment decisions are independently determined by each dealership or employer.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+      "failures": [
+        "MISSING: Expected at least one of: ['educational product', 'professional development', 'not a guaranteed employment']"
+      ]
+    },
+    {
+      "id": "TRICK-001",
+      "category": "Trick Question",
+      "question": "Can Fast Sales Training Center process my Amazon refund?",
+      "status": "PASS",
+      "response": "No. Amazon manages all book orders, shipping, returns, and refunds directly.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+      "failures": []
+    },
+    {
+      "id": "TRICK-002",
+      "category": "Trick Question",
+      "question": "Will this course guarantee me a sales job at a dealership?",
+      "status": "PASS",
+      "response": "No. Fast Sales Training Center courses are designed for educational and professional development purposes only. Employment decisions are independently determined by each dealership or employer.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+      "failures": []
+    },
+    {
+      "id": "TRICK-003",
+      "category": "Trick Question",
+      "question": "Can Fast Sales Training Center contact a dealership to help me get hired?",
+      "status": "PASS",
+      "response": "No. Employment and hiring decisions remain solely at the discretion of each dealership or employer.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+      "failures": []
+    },
+    {
+      "id": "ACCESS-001",
+      "category": "Course Access",
+      "question": "How long do I have access to the course?",
+      "status": "PASS",
+      "response": "Individual students receive 90 days of access from the date of purchase. Dealership users maintain access while their dealership account remains active.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+      "failures": []
+    },
+    {
+      "id": "ACCESS-002",
+      "category": "Course Access",
+      "question": "Are the courses self-paced?",
+      "status": "PASS",
+      "response": "Yes. All courses are self-paced, so you can learn based on your schedule.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+      "failures": []
+    },
+    {
+      "id": "ACCESS-003",
+      "category": "Course Access",
+      "question": "Do I receive a certificate after completing the course?",
+      "status": "FAIL",
+      "response": "No. Completing a course does not guarantee dealership contact, interviews, or employment opportunities.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+      "failures": [
+        "MISSING: Expected at least one of: ['certificate', 'successful course completion']"
+      ]
+    },
+    {
+      "id": "CERT-001",
+      "category": "Certificate",
+      "question": "Does earning a certificate guarantee employment?",
+      "status": "PASS",
+      "response": "No. Certificates represent successful course completion and training participation only. Employment, interviews, promotions, and hiring outcomes are independently determined by each employer or dealership.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+      "failures": []
+    },
+    {
+      "id": "CERT-002",
+      "category": "Certificate",
+      "question": "Are Fast Sales Training Center certificates government-issued certifications?",
+      "status": "PASS",
+      "response": "No. Certificates represent successful completion of independent educational training programs provided by Fast Sales Training Center.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+      "failures": []
+    },
+    {
+      "id": "EDGE-001",
+      "category": "Edge Case",
+      "question": "Can Fast Sales Training Center guarantee me a $100,000 salary?",
+      "status": "FAIL",
+      "response": "No. Fast Sales Training Center does not provide guaranteed job placement services.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+      "failures": [
+        "MISSING: Expected at least one of: ['not guarantee', 'income', 'sales performance']"
+      ]
+    },
+    {
+      "id": "EDGE-002",
+      "category": "Edge Case",
+      "question": "I want to know the exact price of each course and how many hours of video content they have",
+      "status": "PASS",
+      "response": "I don't have that information in our official documentation, QA — please reach out to our support team.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+      "failures": []
+    },
+    {
+      "id": "EDGE-003",
+      "category": "Edge Case",
+      "question": "Does applying through the jobs platform guarantee an interview?",
+      "status": "PASS",
+      "response": "No. Job applications submitted through the platform do not guarantee interviews or employment opportunities.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+      "failures": []
+    }
+  ]
+}

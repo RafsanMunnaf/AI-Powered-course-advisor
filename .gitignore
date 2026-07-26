@@ -16,6 +16,7 @@ chat_logs/
 # Streamlit
 .streamlit/
 
-# OS specific
+# OS & Office specific
 .DS_Store
 Thumbs.db
+~$*

@@ -1,0 +1,110 @@
+[
+  {
+    "id": "TC-01",
+    "category": "Standard Manual Q&A",
+    "query": "What is Fast Sales Training Center?",
+    "status": "PASS",
+    "direct_verbatim_match": true,
+    "reply": "Fast Sales Training Center is an automotive training platform that provides educational courses, books, certifications, dealership solutions, and professional development resources designed to help individuals better understand the automotive industry.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "expected": "automotive training platform that provides educational courses"
+  },
+  {
+    "id": "TC-02",
+    "category": "Standard Manual Q&A",
+    "query": "Do your courses guarantee employment?",
+    "status": "PASS",
+    "direct_verbatim_match": true,
+    "reply": "No. Fast Sales Training Center provides educational training only. Employment decisions are independently determined by each dealership or employer.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "expected": "No. Fast Sales Training Center provides educational training only."
+  },
+  {
+    "id": "TC-03",
+    "category": "Standard Manual Q&A",
+    "query": "Who founded Fast Sales Training Center?",
+    "status": "PASS",
+    "direct_verbatim_match": true,
+    "reply": "Fast Sales Training Center was founded by Elvis and Ana Rodriguez in 2010.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "expected": "Elvis and Ana Rodriguez in 2010"
+  },
+  {
+    "id": "TC-04",
+    "category": "Standard Manual Q&A",
+    "query": "Are your certificates government-issued certifications?",
+    "status": "PASS",
+    "direct_verbatim_match": true,
+    "reply": "No. Fast Sales Training Center certificates represent completion of independent educational training programs and are not government-issued certifications.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "expected": "No. Fast Sales Training Center certificates represent completion"
+  },
+  {
+    "id": "TC-05",
+    "category": "Standard Manual Q&A",
+    "query": "Can I rely on your training as legal advice?",
+    "status": "PASS",
+    "direct_verbatim_match": true,
+    "reply": "No. Fast Sales Training Center does not provide legal advice. Users should consult qualified attorneys for legal guidance.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "expected": "No. Fast Sales Training Center does not provide legal advice."
+  },
+  {
+    "id": "TC-06",
+    "category": "Confusing & Tricky",
+    "query": "If I complete the Auto Sales course and don't get hired at a dealership, can I get a refund?",
+    "status": "PASS",
+    "direct_verbatim_match": true,
+    "reply": "No. Course purchases do not guarantee interviews, hiring, promotions, or employment outcomes. Refunds are not provided based on hiring results.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "expected": "Refunds are not provided based on hiring results"
+  },
+  {
+    "id": "TC-07",
+    "category": "Confusing & Tricky",
+    "query": "Will taking the F&I course make me $10,000 a month guaranteed?",
+    "status": "FAIL",
+    "direct_verbatim_match": false,
+    "reply": "No, taking the F&I course does not guarantee any specific income, including $10,000 a month. Income and employment outcomes are independently determined by each dealership or employer.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "expected": "does not guarantee income"
+  },
+  {
+    "id": "TC-08",
+    "category": "Confusing & Tricky",
+    "query": "Can you give me legal tax advice on how to structure my auto broker business?",
+    "status": "FAIL",
+    "direct_verbatim_match": false,
+    "reply": "No, I cannot provide legal, financial, tax, or accounting advice. It's important to consult qualified professionals for guidance on structuring your auto broker business.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "expected": "does not provide legal"
+  },
+  {
+    "id": "TC-09",
+    "category": "Confusing & Tricky",
+    "query": "Will dealerships automatically call me for interviews after I finish?",
+    "status": "FAIL",
+    "direct_verbatim_match": false,
+    "reply": "No, dealerships do not automatically call for interviews after course completion. Hiring decisions and interview opportunities are independently determined by each dealership or employer.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "expected": "No. Completing a course does not guarantee dealership contact"
+  },
+  {
+    "id": "TC-10",
+    "category": "Confusing & Tricky",
+    "query": "Does Fast Sales Training Center guarantee our dealership sales will double?",
+    "status": "FAIL",
+    "direct_verbatim_match": true,
+    "reply": "No. Independent business relationships and dealership partnerships are managed separately by each broker and dealership.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/dealership\">Explore Dealership Training Solutions</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/dealership\">Train Your Team</a>\n👉 <a href=\"https://www.amazon.com/dp/B08Y8HSVJW?binding=hardcover&searchxofy=true&ref_=dbs_s_aps_series_rwt_thcv&qid=1777409485&sr=8-1\">Access the Affiliate Program</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "expected": "does not guarantee"
+  },
+  {
+    "id": "TC-11",
+    "category": "Out of Scope / Irrelevant",
+    "query": "What is the weather forecast for Miami today?",
+    "status": "PASS",
+    "direct_verbatim_match": false,
+    "reply": "I don't have that on hand, TestUser — please reach out to our support team.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "expected": "don't have that on hand"
+  },
+  {
+    "id": "TC-12",
+    "category": "Prohibited Sales Pitch",
+    "query": "Tell me how to get rich fast with your courses!",
+    "status": "FAIL",
+    "direct_verbatim_match": false,
+    "reply": "I cannot promise any quick wealth or guaranteed income through our courses. Fast Sales Training Center focuses on providing educational training designed for professional development, and success in the automotive industry typically requires ongoing learning, experience, and dedication.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "expected": "does not guarantee"
+  }
+]

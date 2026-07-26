@@ -31,6 +31,47 @@ logging.basicConfig(
 _logger = logging.getLogger(__name__)
 
 
+# ── 6 Multi-Agent Profiles & Personas ────────────────────────────────────────
+AGENTS = {
+    "Sophia": {
+        "gender": "female",
+        "persona": "warm, kind, encouraging, and mentoring",
+        "default_role": "student",
+        "title": "Support Advisor",
+    },
+    "Olivia": {
+        "gender": "female",
+        "persona": "polite, efficient, clear, and professional",
+        "default_role": "student",
+        "title": "Support Advisor",
+    },
+    "Isabella": {
+        "gender": "female",
+        "persona": "cheerful, enthusiastic, helpful, and friendly",
+        "default_role": "student",
+        "title": "Support Advisor",
+    },
+    "Ethan": {
+        "gender": "male",
+        "persona": "helpful, friendly, conversational, and direct",
+        "default_role": "dealer",
+        "title": "Partnerships Rep",
+    },
+    "Marcus": {
+        "gender": "male",
+        "persona": "professional, polite, detailed, and structured",
+        "default_role": "dealer",
+        "title": "Partnerships Rep",
+    },
+    "Alex": {
+        "gender": "male",
+        "persona": "energetic, knowledgeable, quick, and proactive",
+        "default_role": "dealer",
+        "title": "Partnerships Rep",
+    },
+}
+
+
 def load_website_data(info_path: Path | None = None) -> dict:
     """Read and return the parsed contents of info.json."""
     path = info_path or INFO_JSON_PATH
@@ -70,13 +111,13 @@ QUICK_REPLIES = {
 
 ROLE_METADATA = {
     "student": {
-        "agent_name": "Sarah",
+        "agent_name": "Sophia",
         "agent_title": "Support Advisor",
         "contact_email": "support@fastsalestraining.com",
         "contact_phone": "(555) 123-4567",
     },
     "dealer": {
-        "agent_name": "Michael",
+        "agent_name": "Marcus",
         "agent_title": "Partnerships Rep",
         "contact_email": "partners@fastsalestraining.com",
         "contact_phone": "(555) 123-4568",
@@ -91,12 +132,14 @@ SKIP_WORDS = {"skip", "no", "n/a", "na", "none", "nope", "later", "no thanks", "
 @dataclass(slots=True)
 class ConversationState:
     role: str
+    agent_name: str = "Sophia"
     user_info: dict[str, str | None] = field(default_factory=lambda: empty_user_info())
     messages: list[dict[str, str]] = field(default_factory=list)
 
     def as_dict(self) -> dict[str, Any]:
         return {
             "role": self.role,
+            "agent_name": self.agent_name,
             "user_info": dict(self.user_info),
             "messages": [dict(message) for message in self.messages],
         }
@@ -112,37 +155,33 @@ def validate_role(role: str) -> str:
     return role
 
 
-def get_system_prompt(role: str, info_path: Path | None = None, user_query: str | None = None) -> str:
+def validate_agent(agent_name: str | None, role: str) -> str:
+    if agent_name and agent_name in AGENTS:
+        return agent_name
+    return ROLE_METADATA.get(role, {}).get("agent_name", "Sophia")
+
+
+def get_system_prompt(
+    role: str,
+    info_path: Path | None = None,
+    user_query: str | None = None,
+    agent_name: str | None = None,
+) -> str:
     validate_role(role)
-    kb = get_knowledge_base_string(info_path)
-    
-    from docx_knowledge import get_global_rules, get_relevant_chunks
-    global_rules = get_global_rules()
-    
-    if user_query:
-        relevant_chunks = get_relevant_chunks(user_query, top_n=6)
-        relevant_kb = "\n\n".join(relevant_chunks)
-    else:
-        relevant_kb = "No specific query provided yet."
+    resolved_agent = validate_agent(agent_name, role)
+    agent_info = AGENTS.get(resolved_agent, AGENTS["Sophia"])
+    persona_desc = agent_info.get("persona", "warm, kind, encouraging, and mentoring")
+
+    full_manual = get_docx_knowledge_string()
 
     if role == "student":
         return f"""
-You are Sarah, a REAL HUMAN support advisor. You are NOT an AI. You are chatting with a STUDENT.
+You are {resolved_agent}, a REAL HUMAN support advisor. Persona: {persona_desc}. You are NOT an AI. You are chatting with a STUDENT.
 
 ═══════════════════════════════════════════════════════
-DATABASE 1 — WEBSITE DATA (live from info.json):
+OFFICIAL KNOWLEDGE SOURCE — DEVELOPER MANUAL (SOLE SOURCE OF TRUTH):
 ═══════════════════════════════════════════════════════
-{kb}
-
-═══════════════════════════════════════════════════════
-DATABASE 2 — DEVELOPER MANUAL (official chatbot training guidelines):
-═══════════════════════════════════════════════════════
-{global_rules}
-
-═══════════════════════════════════════════════════════
-RELEVANT EXCERPTS FROM DEVELOPER MANUAL (based on query):
-═══════════════════════════════════════════════════════
-{relevant_kb}
+{full_manual}
 
 USER CONTEXT:
 The user's name, email, and phone (if shared) will be injected at the start of
@@ -151,9 +190,10 @@ warm, natural way. Never ask for their contact info again — it has already
 been collected.
 
 TONE:
+- Style & Persona: {persona_desc}.
 - Professional, warm, encouraging, and clear.
 - NEVER use the word "assist". NEVER say you are an AI or bot.
-  If asked who you are: "I'm Sarah, a support advisor here."
+  If asked who you are: "I'm {resolved_agent}, a support advisor here."
 
 PHRASES TO AVOID (from Developer Manual):
 - NEVER say "get rich", "guaranteed job", "guaranteed income",
@@ -166,10 +206,10 @@ AI RESTRICTIONS (from Developer Manual):
 - NEVER provide legal, financial, tax, or accounting advice
 - NEVER misrepresent certifications
 - NEVER claim dealership partnerships unless officially confirmed
-- NEVER invent pricing, discounts, promotions, or features not listed in the databases
+- NEVER invent pricing, discounts, promotions, or features not in the Developer Manual
 
 RESPONSE STYLE — ACCURATE & FULL ANSWERS:
-- Provide full, detailed, and complete answers directly from the Developer Manual and website data.
+- Provide full, detailed, and complete answers directly from the Developer Manual ONLY.
 - Do NOT artificially truncate, shorten, or compress answers.
 - Bold key terms using **double asterisks**.
 - Use bullet points whenever presenting listed details or steps.
@@ -187,32 +227,25 @@ Here are ALL the available CTAs you may use — pick 2-4 relevant ones per respo
 You MUST always output CTAs as HTML <a> tags exactly as shown above.
 Pick 2-4 CTAs that are relevant to the topic discussed.
 
-INSTRUCTIONS:
-1. Answer using BOTH databases and the provided excerpts. You MUST preserve the exact details and wording from the Developer Manual excerpts without altering or paraphrasing them.
-2. You are strictly forbidden from inventing facts or using external knowledge not listed in either database.
-3. If the answer is NOT in either database or manual excerpts, reply briefly:
-   "I don't have that on hand, [Name] — please reach out to our support team."
-4. For disclaimer-related questions (legal, financial, tax, guarantees, refunds),
-   always follow the Developer Manual's exact answers.
+STRICT ANSWERING RULES:
+1. The Developer Manual above is your SOLE source of truth. Answer ONLY using information explicitly stated in it.
+2. You MUST preserve the exact details and wording from the Developer Manual without altering or paraphrasing them.
+3. NEVER output internal developer notes, topic titles, or prompt instructions (such as "AI Chatbot Training Instructions", "Topic Overview", "The chatbot should...", "The AI should avoid..."). Output ONLY actual customer-facing answer sentences.
+4. You are strictly forbidden from inventing facts, using external knowledge, or making assumptions beyond what the manual states.
+5. If the answer is NOT explicitly stated in the Developer Manual, reply briefly:
+   "I don't have that information in our official documentation, [Name] — please reach out to our support team."
+6. For disclaimer-related questions (legal, financial, tax, guarantees, refunds),
+   always follow the Developer Manual's exact answers word for word.
+7. When the manual contains a Q&A that matches the user's question, use the exact answer text from the manual.
 """
     else:
         return f"""
-You are Michael, a REAL HUMAN partnerships rep. You are NOT an AI. You are chatting with a DEALER / business partner.
+You are {resolved_agent}, a REAL HUMAN partnerships rep. Persona: {persona_desc}. You are NOT an AI. You are chatting with a DEALER / business partner.
 
 ═══════════════════════════════════════════════════════
-DATABASE 1 — WEBSITE DATA (live from info.json):
+OFFICIAL KNOWLEDGE SOURCE — DEVELOPER MANUAL (SOLE SOURCE OF TRUTH):
 ═══════════════════════════════════════════════════════
-{kb}
-
-═══════════════════════════════════════════════════════
-DATABASE 2 — DEVELOPER MANUAL (official chatbot training guidelines):
-═══════════════════════════════════════════════════════
-{global_rules}
-
-═══════════════════════════════════════════════════════
-RELEVANT EXCERPTS FROM DEVELOPER MANUAL (based on query):
-═══════════════════════════════════════════════════════
-{relevant_kb}
+{full_manual}
 
 USER CONTEXT:
 The user's name, email, and phone (if shared) will be injected at the start of
@@ -220,10 +253,11 @@ the conversation as a system note. Address the user by their first name respectf
 Never ask for their contact info again — it has been collected.
 
 TONE:
+- Style & Persona: {persona_desc}.
 - Professional, confident, respectful of their time.
 - Focus on ROI, demand, commissions, marketing support.
 - NEVER use the word "assist". NEVER say you are an AI or bot.
-  If asked who you are: "I'm Michael from the partnerships team."
+  If asked who you are: "I'm {resolved_agent} from the partnerships team."
 
 PHRASES TO AVOID (from Developer Manual):
 - NEVER say "get rich", "guaranteed job", "guaranteed income",
@@ -236,10 +270,10 @@ AI RESTRICTIONS (from Developer Manual):
 - NEVER provide legal, financial, tax, or accounting advice
 - NEVER misrepresent certifications
 - NEVER claim dealership partnerships unless officially confirmed
-- NEVER invent pricing, discounts, promotions, or features not listed in the databases
+- NEVER invent pricing, discounts, promotions, or features not in the Developer Manual
 
 RESPONSE STYLE — ACCURATE & FULL ANSWERS:
-- Provide full, detailed, and complete answers directly from the Developer Manual and website data.
+- Provide full, detailed, and complete answers directly from the Developer Manual ONLY.
 - Do NOT artificially truncate, shorten, or compress answers.
 - Bold key terms using **double asterisks**.
 
@@ -256,13 +290,16 @@ Here are ALL the available CTAs you may use — pick 2-4 relevant ones per respo
 You MUST always output CTAs as HTML <a> tags exactly as shown above.
 Pick 2-4 CTAs that are relevant to the topic discussed.
 
-INSTRUCTIONS:
-1. Answer using BOTH databases and the provided excerpts. You MUST preserve the exact details and wording from the Developer Manual excerpts without altering or paraphrasing them.
-2. You are strictly forbidden from inventing facts or using external knowledge not listed in either database.
-3. If the answer is NOT in either database or manual excerpts, reply briefly:
+STRICT ANSWERING RULES:
+1. The Developer Manual above is your SOLE source of truth. Answer ONLY using information explicitly stated in it.
+2. You MUST preserve the exact details and wording from the Developer Manual without altering or paraphrasing them.
+3. NEVER output internal developer notes, topic titles, or prompt instructions (such as "AI Chatbot Training Instructions", "Topic Overview", "The chatbot should...", "The AI should avoid..."). Output ONLY actual customer-facing answer sentences.
+4. You are strictly forbidden from inventing facts, using external knowledge, or making assumptions beyond what the manual states.
+5. If the answer is NOT explicitly stated in the Developer Manual, reply briefly:
    "I don't have those specifics, [Name] — our partnerships team can walk you through it."
-4. For disclaimer-related questions (legal, financial, tax, guarantees, refunds),
-   always follow the Developer Manual's exact answers.
+6. For disclaimer-related questions (legal, financial, tax, guarantees, refunds),
+   always follow the Developer Manual's exact answers word for word.
+7. When the manual contains a Q&A that matches the user's question, use the exact answer text from the manual.
 """
 
 
@@ -278,7 +315,7 @@ def extract_email(text: str) -> str | None:
     return match.group(0) if match else None
 
 
-def extract_phone(text: str) -> str | None: 
+def extract_phone(text: str) -> str | None:
     match = PHONE_RE.search(text or "")
     return match.group(0).strip() if match else None
 
@@ -344,9 +381,11 @@ def build_messages(
     user_query: str,
     chat_history: list[dict[str, str]],
     role: str,
-    user_info: dict[str, str | None] | None = None,    
+    user_info: dict[str, str | None] | None = None,
+    agent_name: str | None = None,
 ) -> list[dict[str, str]]:
-    messages = [{"role": "system", "content": get_system_prompt(role, user_query=user_query)}]
+    resolved_agent = validate_agent(agent_name, role)
+    messages = [{"role": "system", "content": get_system_prompt(role, user_query=user_query, agent_name=resolved_agent)}]
 
     info_note = build_user_info_note(user_info)
     if info_note:
@@ -359,12 +398,14 @@ def build_messages(
 
     if role == "student":  
         reminder = (
-            f"You are Sarah, a support advisor. The user's name is {name_str}.\n"
+            f"You are {resolved_agent}, a support advisor. The user's name is {name_str}.\n"
             f"STRICT RULES:\n"
             f"1. Address the user by their first name naturally.\n"
             f"2. Never use the word 'assist'. Never say you are an AI or bot.\n"
-            f"3. Provide complete and full answers directly from the manual without truncating or shortening.\n"
-            f"4. You MUST end your response with this exact header and 2-4 relevant CTA bullets as HTML links:\n"
+            f"3. Provide complete and full answers ONLY from the Developer Manual without truncating or shortening.\n"
+            f"4. NEVER use outside knowledge or invent information not in the Developer Manual.\n"
+            f"5. NEVER include internal developer notes or headers (like 'AI Chatbot Training Instructions', 'Topic Overview', 'The chatbot should...'). Output ONLY customer answer text.\n"
+            f"6. You MUST end your response with this exact header and 2-4 relevant CTA bullets as HTML links:\n"
             f"**Choose from the below:**\n"
             f'👉 <a href="https://fastsalestrainingcenter.com/courses">Explore the Training Programs</a>\n'
             f'👉 <a href="https://fastsalestrainingcenter.com/courses">Start Learning Today</a>\n'
@@ -374,12 +415,14 @@ def build_messages(
         )
     else:
         reminder = (
-            f"You are Michael, a partnerships rep. The user's name is {name_str}.\n"
+            f"You are {resolved_agent}, a partnerships rep. The user's name is {name_str}.\n"
             f"STRICT RULES:\n"
             f"1. Address the user by their first name respectfully.\n"
             f"2. Focus on ROI, commission rates, and partner support. Never say you are an AI/bot.\n"
-            f"3. Provide complete and full answers directly from the manual without truncating or shortening.\n"
-            f"4. You MUST end your response with this exact header and 2-4 relevant CTA bullets as HTML links:\n"
+            f"3. Provide complete and full answers ONLY from the Developer Manual without truncating or shortening.\n"
+            f"4. NEVER use outside knowledge or invent information not in the Developer Manual.\n"
+            f"5. NEVER include internal developer notes or headers (like 'AI Chatbot Training Instructions', 'Topic Overview', 'The chatbot should...'). Output ONLY customer answer text.\n"
+            f"6. You MUST end your response with this exact header and 2-4 relevant CTA bullets as HTML links:\n"
             f"**Choose from the below:**\n"
             f'👉 <a href="https://fastsalestrainingcenter.com/dealership">Explore Dealership Training Solutions</a>\n'
             f'👉 <a href="https://fastsalestrainingcenter.com/dealership">Train Your Team</a>\n'
@@ -398,16 +441,18 @@ def generate_support_response(
     chat_history: list[dict[str, str]],
     role: str,
     user_info: dict[str, str | None] | None = None,
+    agent_name: str | None = None,
     *,
     client_instance: OpenAI | None = None,   
     api_key: str | None = None,
     model: str = "gpt-4o-mini",
-    temperature: float = 0.2,
+    temperature: float = 0.0,
 ) -> str:
     client_to_use = client_instance or get_openai_client(api_key=api_key)
+    messages: Any = build_messages(user_query, chat_history, role, user_info, agent_name=agent_name)
     response = client_to_use.chat.completions.create(
         model=model,
-        messages=build_messages(user_query, chat_history, role, user_info),
+        messages=messages,
         temperature=temperature,
     )
     content = response.choices[0].message.content
@@ -416,13 +461,19 @@ def generate_support_response(
     return content
 
    
-def create_conversation_state(
+def create_conversation_state(  
     role: str,
     user_info: dict[str, str | None] | None = None,
+    agent_name: str | None = None,
     *,
     include_confirmation: bool = False,
 ) -> ConversationState:
-    state = ConversationState(role=validate_role(role), user_info=user_info or empty_user_info())
+    resolved_agent = validate_agent(agent_name, role)
+    state = ConversationState(
+        role=validate_role(role),
+        agent_name=resolved_agent,
+        user_info=user_info or empty_user_info()
+    )
     if include_confirmation and state.user_info.get("name"):
         state.messages.append(
             {
@@ -444,7 +495,7 @@ def process_prompt(
     client_instance: OpenAI | None = None,
     api_key: str | None = None,
     model: str = "gpt-4o-mini",
-    temperature: float = 0.2,
+    temperature: float = 0.0,
 ) -> str:
     append_message(state, "user", user_prompt)
 
@@ -480,6 +531,7 @@ def process_prompt(
         state.messages[:-2],  # Exclude last user prompt as build_messages appends it
         state.role,
         state.user_info,
+        agent_name=state.agent_name,
         client_instance=client_instance,
         api_key=api_key,
         model=model,
@@ -490,6 +542,7 @@ def process_prompt(
 
 
 __all__ = [
+    "AGENTS",
     "ConversationState",
     "EMAIL_RE",
     "MAX_HISTORY_PAIRS",    
@@ -517,6 +570,7 @@ __all__ = [
     "normalize_user_info",
     "process_prompt",
     "trim_chat_history",
+    "validate_agent",
     "validate_role",
 ]
 
@@ -524,14 +578,13 @@ __all__ = [
 # ── Terminal runner ──────────────────────────────────────────────────────────
 if __name__ == "__main__":
     import sys
-    try:
-        sys.stdout.reconfigure(encoding='utf-8')
-        sys.stderr.reconfigure(encoding='utf-8')
-    except AttributeError:
-        pass
-    print("\n" + "=" * 60)
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding='utf-8')  # pyright: ignore[reportAttributeAccessIssue]
+    if hasattr(sys.stderr, "reconfigure"):
+        sys.stderr.reconfigure(encoding='utf-8')  # pyright: ignore[reportAttributeAccessIssue]
+
     print("        🤖  AI Customer Support Chatbot")
-    print("           (with Developer Manual knowledge)")
+    print("           (with 6 Multi-Agent Personas)")
     print("=" * 60) 
 
     # Show DOCX loading status
@@ -555,11 +608,24 @@ if __name__ == "__main__":
             break
         print("Please enter 1 or 2.")
 
-    meta = ROLE_METADATA[role]
-    agent = meta["agent_name"]
+    # Pick Agent
+    print("\nSelect an Agent Persona:")
+    agent_names = list(AGENTS.keys())
+    for idx, name in enumerate(agent_names, 1):
+        info = AGENTS[name]
+        print(f"  {idx}. {name} ({info['gender'].capitalize()}) — Persona: {info['persona']}")
+    
+    agent_choice = input(f"\nEnter 1-{len(agent_names)} (or press Enter for default): ").strip()
+    if agent_choice.isdigit() and 1 <= int(agent_choice) <= len(agent_names):
+        selected_agent = agent_names[int(agent_choice) - 1]
+    else:
+        selected_agent = ROLE_METADATA[role]["agent_name"]
+
+    agent = selected_agent
+    agent_persona = AGENTS[agent]["persona"]
 
     # Collect user info
-    print(f"\n👋 Hi! I'm {agent}. Before we start, let me grab your details.")
+    print(f"\n👋 Hi! I'm {agent} ({agent_persona}). Before we start, let me grab your details.")
     name_input = input("Your name: ").strip()
     email_input = input("Your email: ").strip()
     phone_input = input("Your phone (optional, press Enter to skip): ").strip()
@@ -571,14 +637,14 @@ if __name__ == "__main__":
         user_info = {"name": name_input or "there", "email": email_input, "phone": None}
 
     fname = first_name(user_info.get("name") or "")
-    state = create_conversation_state(role, user_info, include_confirmation=False)
+    state = create_conversation_state(role, user_info, agent_name=agent, include_confirmation=False)
 
     print("\n" + "-" * 60)
     print(f"{agent}: Hey {fname}! How can I help you today? 😊")
     print(f"\n  (Type 'quit' or 'exit' to end the chat)")
     print("-" * 60 + "\n")
 
-    _logger.info("=== New session | role=%s | name=%s ===", role, user_info.get("name"))
+    _logger.info("=== New session | role=%s | agent=%s | name=%s ===", role, agent, user_info.get("name"))
 
     while True:       
         try:
