@@ -1,0 +1,1013 @@
+[
+  {
+    "id": "TC-01",
+    "category": "Standard Manual Q&A",
+    "role": "student",
+    "agent": "Sophia",
+    "query": "What is Fast Sales Training Center?",
+    "status": "PASS",
+    "is_verbatim_qa_match": true,
+    "verbatim_question_matched": "What is Fast Sales Training Center?",
+    "addressed_by_name": false,
+    "used_forbidden_words": [],
+    "has_cta_header": true,
+    "has_html_links": true,
+    "facts_found": [
+      "automotive training platform",
+      "educational courses"
+    ],
+    "reply": "Fast Sales Training Center is an automotive training platform that provides educational courses, books, certifications, dealership solutions, and professional development resources designed to help individuals better understand the automotive industry.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "criteria_details": [
+      [
+        "Fact Coverage",
+        true
+      ],
+      [
+        "No Forbidden Words",
+        true
+      ],
+      [
+        "CTA Header Present",
+        true
+      ],
+      [
+        "CTA HTML Links Valid",
+        true
+      ]
+    ]
+  },
+  {
+    "id": "TC-02",
+    "category": "Standard Manual Q&A",
+    "role": "student",
+    "agent": "Olivia",
+    "query": "Who founded Fast Sales Training Center?",
+    "status": "PASS",
+    "is_verbatim_qa_match": true,
+    "verbatim_question_matched": "Who founded Fast Sales Training Center?",
+    "addressed_by_name": false,
+    "used_forbidden_words": [],
+    "has_cta_header": true,
+    "has_html_links": true,
+    "facts_found": [
+      "Elvis and Ana Rodriguez",
+      "2010"
+    ],
+    "reply": "Fast Sales Training Center was founded by Elvis and Ana Rodriguez in 2010. 👉 USE A CTA MENU USING ONE OPTION PER TOPIC SHOWN ABOVE\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "criteria_details": [
+      [
+        "Fact Coverage",
+        true
+      ],
+      [
+        "No Forbidden Words",
+        true
+      ],
+      [
+        "CTA Header Present",
+        true
+      ],
+      [
+        "CTA HTML Links Valid",
+        true
+      ]
+    ]
+  },
+  {
+    "id": "TC-03",
+    "category": "Standard Manual Q&A",
+    "role": "student",
+    "agent": "Isabella",
+    "query": "Do your courses guarantee employment?",
+    "status": "PASS",
+    "is_verbatim_qa_match": true,
+    "verbatim_question_matched": "Do your courses guarantee employment?",
+    "addressed_by_name": false,
+    "used_forbidden_words": [],
+    "has_cta_header": true,
+    "has_html_links": true,
+    "facts_found": [
+      "No",
+      "independently determined"
+    ],
+    "reply": "No. Employment decisions are independently determined by each dealership or employer. 👉 USE A CTA MENU USING ONE OPTION PER TOPIC SHOWN ABOVE\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "criteria_details": [
+      [
+        "Fact Coverage",
+        true
+      ],
+      [
+        "No Forbidden Words",
+        true
+      ],
+      [
+        "CTA Header Present",
+        true
+      ],
+      [
+        "CTA HTML Links Valid",
+        true
+      ]
+    ]
+  },
+  {
+    "id": "TC-04",
+    "category": "Standard Manual Q&A",
+    "role": "student",
+    "agent": "Sophia",
+    "query": "Are your certificates government-issued certifications?",
+    "status": "PASS",
+    "is_verbatim_qa_match": true,
+    "verbatim_question_matched": "Are your certificates government-issued certifications?",
+    "addressed_by_name": false,
+    "used_forbidden_words": [],
+    "has_cta_header": true,
+    "has_html_links": true,
+    "facts_found": [
+      "No",
+      "not government-issued"
+    ],
+    "reply": "No. Fast Sales Training Center certificates represent completion of independent educational training programs and are not government-issued certifications.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "criteria_details": [
+      [
+        "Fact Coverage",
+        true
+      ],
+      [
+        "No Forbidden Words",
+        true
+      ],
+      [
+        "CTA Header Present",
+        true
+      ],
+      [
+        "CTA HTML Links Valid",
+        true
+      ]
+    ]
+  },
+  {
+    "id": "TC-05",
+    "category": "Standard Manual Q&A",
+    "role": "student",
+    "agent": "Olivia",
+    "query": "Can I rely on your training as legal advice?",
+    "status": "PASS",
+    "is_verbatim_qa_match": true,
+    "verbatim_question_matched": "Can I rely on your training as legal advice?",
+    "addressed_by_name": false,
+    "used_forbidden_words": [],
+    "has_cta_header": true,
+    "has_html_links": true,
+    "facts_found": [
+      "No",
+      "does not provide legal advice"
+    ],
+    "reply": "No. Fast Sales Training Center does not provide legal advice. Users should consult qualified attorneys for legal guidance.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "criteria_details": [
+      [
+        "Fact Coverage",
+        true
+      ],
+      [
+        "No Forbidden Words",
+        true
+      ],
+      [
+        "CTA Header Present",
+        true
+      ],
+      [
+        "CTA HTML Links Valid",
+        true
+      ]
+    ]
+  },
+  {
+    "id": "TC-06",
+    "category": "Standard Manual Q&A",
+    "role": "dealer",
+    "agent": "Marcus",
+    "query": "How does the affiliate program work for dealers?",
+    "status": "PASS",
+    "is_verbatim_qa_match": false,
+    "verbatim_question_matched": null,
+    "addressed_by_name": false,
+    "used_forbidden_words": [],
+    "has_cta_header": true,
+    "has_html_links": true,
+    "facts_found": [
+      "affiliate",
+      "commission"
+    ],
+    "reply": "The Fast Sales Training Center affiliate program is managed through ClickBank. Affiliates can promote eligible Fast Sales Training Center products using their unique ClickBank affiliate links. ClickBank handles various aspects of the affiliate program, including:\n\n- Affiliate registration\n- Affiliate tracking\n- Commission reporting\n- Commission payouts\n- Affiliate account access\n- Payment processing\n- Tax documentation\n\nAffiliates are responsible for managing their ClickBank account, maintaining accurate payout information, and following ClickBank policies and terms. They must promote products ethically and professionally while using approved affiliate links.\n\nFast Sales Training Center does not directly manage affiliate operations, payments, or ClickBank account services. Affiliates experiencing issues related to commissions, account access, or payments should contact ClickBank Support directly.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/dealership\">Explore Dealership Training Solutions</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/dealership\">Train Your Team</a>\n👉 <a href=\"https://www.amazon.com/dp/B08Y8HSVJW?binding=hardcover&searchxofy=true&ref_=dbs_s_aps_series_rwt_thcv&qid=1777409485&sr=8-1\">Access the Affiliate Program</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "criteria_details": [
+      [
+        "Fact Coverage",
+        true
+      ],
+      [
+        "No Forbidden Words",
+        true
+      ],
+      [
+        "CTA Header Present",
+        true
+      ],
+      [
+        "CTA HTML Links Valid",
+        true
+      ]
+    ]
+  },
+  {
+    "id": "TC-07",
+    "category": "Standard Manual Q&A",
+    "role": "dealer",
+    "agent": "Ethan",
+    "query": "What marketing support do you provide for partners?",
+    "status": "FAIL",
+    "is_verbatim_qa_match": false,
+    "verbatim_question_matched": null,
+    "addressed_by_name": true,
+    "used_forbidden_words": [],
+    "has_cta_header": true,
+    "has_html_links": true,
+    "facts_found": [],
+    "reply": "I don't have those specifics, John — our partnerships team can walk you through it.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/dealership\">Explore Dealership Training Solutions</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/dealership\">Train Your Team</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "criteria_details": [
+      [
+        "Fact Coverage",
+        false
+      ],
+      [
+        "No Forbidden Words",
+        true
+      ],
+      [
+        "CTA Header Present",
+        true
+      ],
+      [
+        "CTA HTML Links Valid",
+        true
+      ]
+    ]
+  },
+  {
+    "id": "TC-08",
+    "category": "Confusing & Tricky Questions",
+    "role": "student",
+    "agent": "Sophia",
+    "query": "If I complete the Auto Sales course and don't get hired at a dealership, can I get a refund?",
+    "status": "PASS",
+    "is_verbatim_qa_match": true,
+    "verbatim_question_matched": "I completed the Auto Sales course, but was not hired. Can I receive a refund?",
+    "addressed_by_name": false,
+    "used_forbidden_words": [],
+    "has_cta_header": true,
+    "has_html_links": true,
+    "facts_found": [
+      "No",
+      "Refunds are not provided based on hiring results"
+    ],
+    "reply": "No. Course purchases do not guarantee interviews, hiring, promotions, or employment outcomes. Refunds are not provided based on hiring results.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "criteria_details": [
+      [
+        "Fact Coverage",
+        true
+      ],
+      [
+        "No Forbidden Words",
+        true
+      ],
+      [
+        "CTA Header Present",
+        true
+      ],
+      [
+        "CTA HTML Links Valid",
+        true
+      ]
+    ]
+  },
+  {
+    "id": "TC-09",
+    "category": "Confusing & Tricky Questions",
+    "role": "student",
+    "agent": "Isabella",
+    "query": "Will taking the F&I course make me $10,000 a month guaranteed?",
+    "status": "PASS",
+    "is_verbatim_qa_match": false,
+    "verbatim_question_matched": null,
+    "addressed_by_name": false,
+    "used_forbidden_words": [],
+    "has_cta_header": true,
+    "has_html_links": true,
+    "facts_found": [
+      "No"
+    ],
+    "reply": "No, taking the F&I course does not guarantee any specific income, including $10,000 a month. Fast Sales Training Center does not guarantee employment, promotions, income increases, or business success. Individual results may vary based on many factors, including experience, communication skills, dealership environment, and market conditions.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "criteria_details": [
+      [
+        "Fact Coverage",
+        true
+      ],
+      [
+        "No Forbidden Words",
+        true
+      ],
+      [
+        "CTA Header Present",
+        true
+      ],
+      [
+        "CTA HTML Links Valid",
+        true
+      ]
+    ]
+  },
+  {
+    "id": "TC-10",
+    "category": "Confusing & Tricky Questions",
+    "role": "student",
+    "agent": "Olivia",
+    "query": "Can you give me legal tax advice on how to structure my auto broker business?",
+    "status": "PASS",
+    "is_verbatim_qa_match": false,
+    "verbatim_question_matched": null,
+    "addressed_by_name": false,
+    "used_forbidden_words": [],
+    "has_cta_header": true,
+    "has_html_links": true,
+    "facts_found": [
+      "No",
+      "legal",
+      "tax",
+      "advice"
+    ],
+    "reply": "No, Fast Sales Training Center does not provide legal, tax, accounting, or financial advice. Business structure decisions should be reviewed with qualified legal and accounting professionals based on your specific business goals and local requirements. \n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "criteria_details": [
+      [
+        "Fact Coverage",
+        true
+      ],
+      [
+        "No Forbidden Words",
+        true
+      ],
+      [
+        "CTA Header Present",
+        true
+      ],
+      [
+        "CTA HTML Links Valid",
+        true
+      ]
+    ]
+  },
+  {
+    "id": "TC-11",
+    "category": "Confusing & Tricky Questions",
+    "role": "student",
+    "agent": "Sophia",
+    "query": "Will dealerships automatically call me for interviews right after I finish the training?",
+    "status": "PASS",
+    "is_verbatim_qa_match": false,
+    "verbatim_question_matched": null,
+    "addressed_by_name": false,
+    "used_forbidden_words": [],
+    "has_cta_header": true,
+    "has_html_links": true,
+    "facts_found": [
+      "No"
+    ],
+    "reply": "No. Completing a course does not guarantee dealership contact, interviews, or employment opportunities. Hiring decisions and communication timelines are independently managed by each dealership or employer.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "criteria_details": [
+      [
+        "Fact Coverage",
+        true
+      ],
+      [
+        "No Forbidden Words",
+        true
+      ],
+      [
+        "CTA Header Present",
+        true
+      ],
+      [
+        "CTA HTML Links Valid",
+        true
+      ]
+    ]
+  },
+  {
+    "id": "TC-12",
+    "category": "Confusing & Tricky Questions",
+    "role": "dealer",
+    "agent": "Marcus",
+    "query": "Does Fast Sales Training Center guarantee that our dealership sales will double in 30 days?",
+    "status": "PASS",
+    "is_verbatim_qa_match": true,
+    "verbatim_question_matched": "Can Fast Sales Training Center guarantee dealership legitimacy?",
+    "addressed_by_name": false,
+    "used_forbidden_words": [],
+    "has_cta_header": true,
+    "has_html_links": true,
+    "facts_found": [],
+    "reply": "Participating dealerships independently manage their own business operations, hiring practices, and employment processes.👉 USE A CTA MENU USING ONE OPTION PER TOPIC SHOWN ABOVE\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/dealership\">Explore Dealership Training Solutions</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/dealership\">Train Your Team</a>\n👉 <a href=\"https://www.amazon.com/dp/B08Y8HSVJW?binding=hardcover&searchxofy=true&ref_=dbs_s_aps_series_rwt_thcv&qid=1777409485&sr=8-1\">Access the Affiliate Program</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "criteria_details": [
+      [
+        "Fact Coverage",
+        true
+      ],
+      [
+        "No Forbidden Words",
+        true
+      ],
+      [
+        "CTA Header Present",
+        true
+      ],
+      [
+        "CTA HTML Links Valid",
+        true
+      ]
+    ]
+  },
+  {
+    "id": "TC-13",
+    "category": "Confusing & Tricky Questions",
+    "role": "student",
+    "agent": "Isabella",
+    "query": "Is Fast Sales Training Center an officially accredited university that grants accredited college degrees?",
+    "status": "PASS",
+    "is_verbatim_qa_match": false,
+    "verbatim_question_matched": null,
+    "addressed_by_name": false,
+    "used_forbidden_words": [],
+    "has_cta_header": true,
+    "has_html_links": true,
+    "facts_found": [
+      "No"
+    ],
+    "reply": "No, Fast Sales Training Center provides independent automotive training and professional development programs. It is not an officially accredited university and does not grant accredited college degrees. \n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "criteria_details": [
+      [
+        "Fact Coverage",
+        true
+      ],
+      [
+        "No Forbidden Words",
+        true
+      ],
+      [
+        "CTA Header Present",
+        true
+      ],
+      [
+        "CTA HTML Links Valid",
+        true
+      ]
+    ]
+  },
+  {
+    "id": "TC-14",
+    "category": "Confusing & Tricky Questions",
+    "role": "dealer",
+    "agent": "Ethan",
+    "query": "If a student breaks a state automotive sales law, does Fast Sales Training Center take full legal responsibility?",
+    "status": "PASS",
+    "is_verbatim_qa_match": false,
+    "verbatim_question_matched": null,
+    "addressed_by_name": false,
+    "used_forbidden_words": [],
+    "has_cta_header": true,
+    "has_html_links": true,
+    "facts_found": [
+      "No",
+      "independently"
+    ],
+    "reply": "No, Fast Sales Training Center does not take responsibility for any legal issues arising from a student's actions. Each learner is independently responsible for researching and complying with all applicable laws, regulations, licensing requirements, and business practices in their jurisdiction. Fast Sales Training Center provides educational training only and does not determine, verify, or guarantee compliance with local laws.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/dealership\">Explore Dealership Training Solutions</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/dealership\">Train Your Team</a>\n👉 <a href=\"https://www.amazon.com/dp/B08Y8HSVJW?binding=hardcover&searchxofy=true&ref_=dbs_s_aps_series_rwt_thcv&qid=1777409485&sr=8-1\">Access the Affiliate Program</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "criteria_details": [
+      [
+        "Fact Coverage",
+        true
+      ],
+      [
+        "No Forbidden Words",
+        true
+      ],
+      [
+        "CTA Header Present",
+        true
+      ],
+      [
+        "CTA HTML Links Valid",
+        true
+      ]
+    ]
+  },
+  {
+    "id": "TC-15",
+    "category": "Out-of-Scope Information",
+    "role": "student",
+    "agent": "Sophia",
+    "query": "What is the weather forecast in Miami today?",
+    "status": "PASS",
+    "is_verbatim_qa_match": false,
+    "verbatim_question_matched": null,
+    "addressed_by_name": true,
+    "used_forbidden_words": [],
+    "has_cta_header": true,
+    "has_html_links": true,
+    "facts_found": [
+      "don't have that information",
+      "reach out to our support team"
+    ],
+    "reply": "I don't have that information in our official documentation, John — please reach out to our support team.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "criteria_details": [
+      [
+        "Out-of-Scope Fallback",
+        true
+      ],
+      [
+        "No Forbidden Words",
+        true
+      ],
+      [
+        "CTA Header Present",
+        true
+      ],
+      [
+        "CTA HTML Links Valid",
+        true
+      ]
+    ]
+  },
+  {
+    "id": "TC-16",
+    "category": "Out-of-Scope Information",
+    "role": "student",
+    "agent": "Olivia",
+    "query": "Can you write a Python script for web scraping car prices?",
+    "status": "PASS",
+    "is_verbatim_qa_match": false,
+    "verbatim_question_matched": null,
+    "addressed_by_name": true,
+    "used_forbidden_words": [],
+    "has_cta_header": true,
+    "has_html_links": true,
+    "facts_found": [
+      "don't have that information"
+    ],
+    "reply": "I don't have that information in our official documentation, John — please reach out to our support team.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "criteria_details": [
+      [
+        "Out-of-Scope Fallback",
+        true
+      ],
+      [
+        "No Forbidden Words",
+        true
+      ],
+      [
+        "CTA Header Present",
+        true
+      ],
+      [
+        "CTA HTML Links Valid",
+        true
+      ]
+    ]
+  },
+  {
+    "id": "TC-17",
+    "category": "Out-of-Scope Information",
+    "role": "student",
+    "agent": "Isabella",
+    "query": "Do you offer a 50% discount for military veterans?",
+    "status": "PASS",
+    "is_verbatim_qa_match": false,
+    "verbatim_question_matched": null,
+    "addressed_by_name": true,
+    "used_forbidden_words": [],
+    "has_cta_header": true,
+    "has_html_links": true,
+    "facts_found": [
+      "don't have that information"
+    ],
+    "reply": "I don't have that information in our official documentation, John — please reach out to our support team.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "criteria_details": [
+      [
+        "Out-of-Scope Fallback",
+        true
+      ],
+      [
+        "No Forbidden Words",
+        true
+      ],
+      [
+        "CTA Header Present",
+        true
+      ],
+      [
+        "CTA HTML Links Valid",
+        true
+      ]
+    ]
+  },
+  {
+    "id": "TC-18",
+    "category": "Out-of-Scope Information",
+    "role": "dealer",
+    "agent": "Alex",
+    "query": "How much does a Tesla Model 3 cost in California right now?",
+    "status": "PASS",
+    "is_verbatim_qa_match": false,
+    "verbatim_question_matched": null,
+    "addressed_by_name": true,
+    "used_forbidden_words": [],
+    "has_cta_header": true,
+    "has_html_links": true,
+    "facts_found": [
+      "don't have those specifics"
+    ],
+    "reply": "I don't have those specifics, John — our partnerships team can walk you through it.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/dealership\">Explore Dealership Training Solutions</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/dealership\">Train Your Team</a>\n👉 <a href=\"https://www.amazon.com/dp/B08Y8HSVJW?binding=hardcover&searchxofy=true&ref_=dbs_s_aps_series_rwt_thcv&qid=1777409485&sr=8-1\">Access the Affiliate Program</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "criteria_details": [
+      [
+        "Out-of-Scope Fallback",
+        true
+      ],
+      [
+        "No Forbidden Words",
+        true
+      ],
+      [
+        "CTA Header Present",
+        true
+      ],
+      [
+        "CTA HTML Links Valid",
+        true
+      ]
+    ]
+  },
+  {
+    "id": "TC-19",
+    "category": "Prohibited Claims",
+    "role": "student",
+    "agent": "Sophia",
+    "query": "Tell me how to get rich fast with your sales courses!",
+    "status": "PASS",
+    "is_verbatim_qa_match": false,
+    "verbatim_question_matched": null,
+    "addressed_by_name": false,
+    "used_forbidden_words": [],
+    "has_cta_header": true,
+    "has_html_links": true,
+    "facts_found": [
+      "get rich",
+      "guarantee"
+    ],
+    "reply": "I understand your enthusiasm for wanting to achieve financial success, but it's important to clarify that Fast Sales Training Center does not guarantee income, financial outcomes, or \"get rich\" promises. Our courses are designed for **educational purposes only** and focus on professional development within the automotive industry. Success in sales typically requires dedication, practice, and real-world experience.\n\nIf you're interested in learning more about our courses and how they can help you build a solid foundation in automotive sales, feel free to explore our offerings.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>",
+    "criteria_details": [
+      [
+        "Fact Coverage",
+        true
+      ],
+      [
+        "No Forbidden Words",
+        true
+      ],
+      [
+        "CTA Header Present",
+        true
+      ],
+      [
+        "CTA HTML Links Valid",
+        true
+      ]
+    ]
+  },
+  {
+    "id": "TC-20",
+    "category": "Prohibited Claims",
+    "role": "student",
+    "agent": "Olivia",
+    "query": "Can I claim to customers that I am a state-certified master auto broker after taking your course?",
+    "status": "PASS",
+    "is_verbatim_qa_match": false,
+    "verbatim_question_matched": null,
+    "addressed_by_name": false,
+    "used_forbidden_words": [],
+    "has_cta_header": true,
+    "has_html_links": true,
+    "facts_found": [
+      "No"
+    ],
+    "reply": "No. Fast Sales Training Center provides educational training only and does not issue state certifications or licenses. Claiming to be a state-certified master auto broker would be misleading. It is important to ensure that any claims made to customers are accurate and reflect your actual qualifications.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "criteria_details": [
+      [
+        "Fact Coverage",
+        true
+      ],
+      [
+        "No Forbidden Words",
+        true
+      ],
+      [
+        "CTA Header Present",
+        true
+      ],
+      [
+        "CTA HTML Links Valid",
+        true
+      ]
+    ]
+  },
+  {
+    "id": "TC-21",
+    "category": "Persona & Support Tone",
+    "role": "student",
+    "agent": "Sophia",
+    "query": "Are you an AI chatbot or a real person?",
+    "status": "PASS",
+    "is_verbatim_qa_match": true,
+    "verbatim_question_matched": "Are you a real person?",
+    "addressed_by_name": false,
+    "used_forbidden_words": [],
+    "has_cta_header": true,
+    "has_html_links": true,
+    "facts_found": [],
+    "reply": "I’m the Fast Sales Training Center AI assistant designed to help answer questions about courses, platform features, dealership training information, and automotive education resources. 👉 USE A CTA MENU USING ONE OPTION PER TOPIC SHOWN ABOVE\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "criteria_details": [
+      [
+        "Fact Coverage",
+        true
+      ],
+      [
+        "No Forbidden Words",
+        true
+      ],
+      [
+        "CTA Header Present",
+        true
+      ],
+      [
+        "CTA HTML Links Valid",
+        true
+      ]
+    ]
+  },
+  {
+    "id": "TC-22",
+    "category": "Persona & Support Tone",
+    "role": "student",
+    "agent": "Isabella",
+    "query": "Can you assist me with choosing the right course?",
+    "status": "FAIL",
+    "is_verbatim_qa_match": false,
+    "verbatim_question_matched": null,
+    "addressed_by_name": true,
+    "used_forbidden_words": [],
+    "has_cta_header": true,
+    "has_html_links": true,
+    "facts_found": [],
+    "reply": "Of course, John! Choosing the right course depends on your career goals and interests in the automotive industry. Here are some options to consider:\n\n- **How to Become an Auto Sales Associate**: This course teaches the fundamentals of automotive sales and customer interaction.\n- **How to Become an Auto F&I Manager**: This course focuses on dealership finance and insurance operations.\n- **How to Become an Auto Broker**: This course provides insights into operating an independent auto brokerage business.\n- **The Essential Auto Dealership Guide**: This course offers a comprehensive understanding of dealership operations and structure.\n- **How to Improve Auto Sales Phone Skills**: This course strengthens phone communication and appointment-setting skills.\n- **How to Overcome Auto Sales Objections**: This course builds confidence in handling objections and closing sales.\n\nFeel free to choose the one that aligns best with your interests and career aspirations!\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "criteria_details": [
+      [
+        "Fact Coverage",
+        false
+      ],
+      [
+        "No Forbidden Words",
+        true
+      ],
+      [
+        "CTA Header Present",
+        true
+      ],
+      [
+        "CTA HTML Links Valid",
+        true
+      ]
+    ]
+  },
+  {
+    "id": "TC-23",
+    "category": "Persona & Support Tone",
+    "role": "student",
+    "agent": "Sophia",
+    "query": "What is my email address and phone number stored in your system?",
+    "status": "PASS",
+    "is_verbatim_qa_match": false,
+    "verbatim_question_matched": null,
+    "addressed_by_name": true,
+    "used_forbidden_words": [],
+    "has_cta_header": true,
+    "has_html_links": true,
+    "facts_found": [
+      "john.doe@example.com",
+      "555-987-6543"
+    ],
+    "reply": "Your email address is john.doe@example.com and your phone number is 555-987-6543. \n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "criteria_details": [
+      [
+        "Fact Coverage",
+        true
+      ],
+      [
+        "No Forbidden Words",
+        true
+      ],
+      [
+        "CTA Header Present",
+        true
+      ],
+      [
+        "CTA HTML Links Valid",
+        true
+      ]
+    ]
+  },
+  {
+    "id": "TC-24",
+    "category": "Persona & Support Tone",
+    "role": "dealer",
+    "agent": "Marcus",
+    "query": "Who are you and what is your job title here?",
+    "status": "FAIL",
+    "is_verbatim_qa_match": false,
+    "verbatim_question_matched": null,
+    "addressed_by_name": false,
+    "used_forbidden_words": [
+      "assist"
+    ],
+    "has_cta_header": true,
+    "has_html_links": true,
+    "facts_found": [
+      "Marcus",
+      "partnerships team"
+    ],
+    "reply": "I'm Marcus from the partnerships team. My role involves supporting our dealership partners and helping them understand the benefits of our training programs. If you have any questions about our offerings or how we can assist your dealership, feel free to ask!\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/dealership\">Explore Dealership Training Solutions</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/dealership\">Train Your Team</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "criteria_details": [
+      [
+        "Fact Coverage",
+        true
+      ],
+      [
+        "No Forbidden Words",
+        false
+      ],
+      [
+        "CTA Header Present",
+        true
+      ],
+      [
+        "CTA HTML Links Valid",
+        true
+      ]
+    ]
+  },
+  {
+    "id": "TC-25",
+    "category": "CTA Formatting",
+    "role": "student",
+    "agent": "Sophia",
+    "query": "Where can I find the list of available courses?",
+    "status": "FAIL",
+    "is_verbatim_qa_match": false,
+    "verbatim_question_matched": null,
+    "addressed_by_name": false,
+    "used_forbidden_words": [],
+    "has_cta_header": true,
+    "has_html_links": true,
+    "facts_found": [],
+    "reply": "You can find the list of available courses on the Fast Sales Training Center website. Each course is designed to provide educational training and professional development in various areas of the automotive industry. \n\nIf you're interested in exploring the courses, please visit the courses section on our website.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>",
+    "criteria_details": [
+      [
+        "Fact Coverage",
+        false
+      ],
+      [
+        "No Forbidden Words",
+        true
+      ],
+      [
+        "CTA Header Present",
+        true
+      ],
+      [
+        "CTA HTML Links Valid",
+        true
+      ]
+    ]
+  },
+  {
+    "id": "TC-26",
+    "category": "CTA Formatting",
+    "role": "dealer",
+    "agent": "Marcus",
+    "query": "Where can I find dealership training solutions?",
+    "status": "FAIL",
+    "is_verbatim_qa_match": false,
+    "verbatim_question_matched": null,
+    "addressed_by_name": false,
+    "used_forbidden_words": [],
+    "has_cta_header": true,
+    "has_html_links": true,
+    "facts_found": [],
+    "reply": "You can explore dealership training solutions directly on our website. We offer a variety of training programs designed to support consistency, accountability, and operational development across dealership teams.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/dealership\">Explore Dealership Training Solutions</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/dealership\">Train Your Team</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "criteria_details": [
+      [
+        "Fact Coverage",
+        false
+      ],
+      [
+        "No Forbidden Words",
+        true
+      ],
+      [
+        "CTA Header Present",
+        true
+      ],
+      [
+        "CTA HTML Links Valid",
+        true
+      ]
+    ]
+  },
+  {
+    "id": "TC-27",
+    "category": "Complex Multi-Part Query",
+    "role": "student",
+    "agent": "Sophia",
+    "query": "I want to know about your available courses and also whether you provide student financial loans.",
+    "status": "FAIL",
+    "is_verbatim_qa_match": false,
+    "verbatim_question_matched": null,
+    "addressed_by_name": false,
+    "used_forbidden_words": [],
+    "has_cta_header": true,
+    "has_html_links": true,
+    "facts_found": [],
+    "reply": "Fast Sales Training Center offers a variety of courses designed for professional development in the automotive industry. Here are some of the available courses:\n\n1. **How to Become an Auto Sales Associate** - $499 for 90 days of access.\n2. **How to Become an Auto F&I Manager** - $499 for 90 days of access.\n3. **How to Become an Auto Broker** - $499 for 90 days of access.\n4. **How to Improve Auto Sales Phone Skills** - $399 for 90 days of access.\n5. **The Essential Auto Dealership Guide** - $399 for 90 days of access.\n6. **How to Overcome Auto Sales Objections** - $399 for 90 days of access.\n\nRegarding student financial loans, Fast Sales Training Center does not provide financial loans or financing options for course purchases. Learners are encouraged to explore external financial options if needed.\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "criteria_details": [
+      [
+        "Fact Coverage",
+        false
+      ],
+      [
+        "No Forbidden Words",
+        true
+      ],
+      [
+        "CTA Header Present",
+        true
+      ],
+      [
+        "CTA HTML Links Valid",
+        true
+      ]
+    ]
+  },
+  {
+    "id": "TC-28",
+    "category": "Specific Manual Rules",
+    "role": "student",
+    "agent": "Olivia",
+    "query": "Can I change my name on my certificate after it has been issued?",
+    "status": "PASS",
+    "is_verbatim_qa_match": true,
+    "verbatim_question_matched": "Can you change the name on my certificate?",
+    "addressed_by_name": false,
+    "used_forbidden_words": [],
+    "has_cta_header": true,
+    "has_html_links": true,
+    "facts_found": [
+      "certificate"
+    ],
+    "reply": "No. Certificate names cannot be changed after account creation because certificates are generated using the registered learner information associated with the account. 👉 USE A CTA MENU USING ONE OPTION PER TOPIC SHOWN ABOVE\n\n**Choose from the below:**\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Explore the Training Programs</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/courses\">Start Learning Today</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/jobs\">Access the Jobs Section</a>\n👉 <a href=\"https://fastsalestrainingcenter.com/#contact-us\">Contact Our Team</a>",
+    "criteria_details": [
+      [
+        "Fact Coverage",
+        true
+      ],
+      [
+        "No Forbidden Words",
+        true
+      ],
+      [
+        "CTA Header Present",
+        true
+      ],
+      [
+        "CTA HTML Links Valid",
+        true
+      ]
+    ]
+  }
+]

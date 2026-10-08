@@ -86,7 +86,8 @@ def _extract_docx_text(docx_path: str) -> str:
     if txt_path.exists():
         try:
             with open(txt_path, "r", encoding="utf-8") as f:
-                text = f.read()
+                # <CHANGED: Clean non-breaking spaces (\xa0) from text fallback>
+                text = f.read().replace("\xa0", " ")
                 _logger.info("Loaded developer manual from TXT fallback: %d chars", len(text))
                 return text
         except Exception as exc:
@@ -137,6 +138,176 @@ def get_docx_knowledge_string(docx_path: Path | str | None = None) -> str:
     return _extract_docx_text(resolved)
 
 
+# ── Developer-instruction stripping ──────────────────────────────────────────
+
+# Regex patterns that match developer-facing instruction lines (case-insensitive)
+_INSTRUCTION_LINE_REGEXES: list[re.Pattern[str]] = [
+    re.compile(p, re.IGNORECASE) for p in [
+        # "The AI / chatbot should/must/may/can ..." (with optional bullet prefix)
+        r"^[•\-\*]?\s*the\s+(ai|chatbot|ai\s+chatbot)\s+(should|must|may|can|will|needs?\s+to)\b",
+        # "The AI should NOT / NEVER ..."
+        r"^[•\-\*]?\s*the\s+(ai|chatbot|ai\s+chatbot)\s+should\s+(not|never)\b",
+        # "Train the AI chatbot ..."
+        r"^[•\-\*]?\s*train\s+the\s+(ai|chatbot)",
+        # "The AI tone should ..."
+        r"^[•\-\*]?\s*the\s+ai\s+tone\s+should\b",
+        # Mid-sentence: ", the AI should ..." or "when ... the AI should"
+        r"\bthe\s+ai\s+(should|must)\s+(politely|redirect|understand|encourage|avoid|remain|reinforce|acknowledge|answer|reduce)\b",
+    ]
+]
+
+# Exact-prefix patterns (uppercase comparison)
+_INSTRUCTION_PREFIXES: tuple[str, ...] = (
+    "AI CHATBOT TRAINING INSTRUCTIONS",
+    "AI CHATBOT KNOWLEDGE BASE",
+    "TOPIC OVERVIEW",
+    "IMPORTANT AI POSITIONING",
+    "IMPORTANT AI RULE",
+    "AI RULE",
+    "AI RESPONSE RULES",
+    "AI COMMUNICATION STYLE",
+    "AI RESTRICTIONS",
+    "RECOMMENDED AI PHRASES",
+    "RECOMMENDED CTA EXAMPLES",
+    "PHRASES THE AI SHOULD",
+    "THE AI MUST",
+    "THE AI SHOULD",
+    "THE AI MAY",
+    "THE CHATBOT SHOULD",
+    "THE CHATBOT MUST",
+    "NEVER TELL USERS",
+    "DO NOT TELL USERS",
+    "CAREER GROWTH TOPIC OVERVIEW",
+    "DEALERSHIP LIABILITY & EMPLOYMENT DISCLAIMER",
+    "JOB OPPORTUNITIES POLICY",
+    "LEGAL, BUSINESS & FINANCIAL LIMITATIONS",
+    "COURSE & CERTIFICATE POSITIONING",
+    "EXAMPLES OF DEALERSHIP TERMS TO TRAIN",
+    "GENERAL CTA OPTIONS FOR YOUR AI",
+    "EVERY CHATBOX ANSWER HAS TO END",
+    "A MENU CONNECTING TO EACH LINK",
+)
+
+# Exact-content patterns (uppercase) — lines that match entirely
+_INSTRUCTION_EXACT: frozenset[str] = frozenset({
+    "FAST SALES TRAINING CENTER",
+    "AI CHATBOT KNOWLEDGE BASE",
+})
+
+# Substring patterns — if ANY of these appear anywhere in the line (uppercase)
+_INSTRUCTION_SUBSTRINGS: tuple[str, ...] = (
+    "AI CHATBOT TRAINING INSTRUCTIONS",
+    "THE CHATBOT SHOULD NOT",
+    "THE AI SHOULD NOT",
+    "TOPIC OVERVIEW",
+)
+
+
+def _is_developer_instruction_line(line: str) -> bool:
+    """Return True if *line* is a developer-facing instruction that should be stripped."""
+    stripped = line.strip()
+    if not stripped:
+        return False
+
+    upper = stripped.upper()
+
+    # 1. Exact full-line matches
+    if upper in _INSTRUCTION_EXACT:
+        return True
+
+    # 2. Prefix matches
+    for prefix in _INSTRUCTION_PREFIXES:
+        if upper.startswith(prefix):
+            return True
+
+    # 3. Substring matches
+    for sub in _INSTRUCTION_SUBSTRINGS:
+        if sub in upper:
+            return True
+
+    # 4. Regex matches (for natural-language instruction patterns)
+    for rx in _INSTRUCTION_LINE_REGEXES:
+        if rx.search(stripped):
+            return True
+
+    # 5. Lines that are ONLY ✔/❌ bullet lists describing AI behavior rules
+    #    (e.g. "✔ Professional ✔ Respectful ✔ Clear ✔ Calm")
+    #    These are always AI training directives, never customer-facing content
+    if stripped.startswith(("✔", "❌")) and ("✔" in stripped or "❌" in stripped):
+        # If it contains more than 2 checkmarks/crosses, it's a rule list
+        check_count = stripped.count("✔") + stripped.count("❌")
+        if check_count >= 2:
+            return True
+
+    return False
+
+
+def strip_developer_instructions(text: str) -> str:
+    """
+    Remove all developer-facing instruction lines from the manual text.
+
+    This ensures the AI only sees factual Q&A content and never sees lines like
+    "The AI chatbot should...", "Topic Overview", "AI Chatbot Training Instructions", etc.
+    """
+    if not text:
+        return text
+
+    # Phase 1: Strip inline CTA instructions embedded within answer text
+    #   e.g. "...approved platform access.👉 USE A CTA MENU USING ONE OPTION PER TOPIC SHOWN ABOVE"
+    text = re.sub(
+        r'\s*👉\s*USE A CTA MENU[^\n]*',
+        '',
+        text,
+        flags=re.IGNORECASE,
+    )
+    # Also catch ✔ variant
+    text = re.sub(
+        r'\s*✔\s*USE A CTA MENU[^\n]*',
+        '',
+        text,
+        flags=re.IGNORECASE,
+    )
+    # Catch-all: strip bare "USE A CTA MENU..." even without emoji prefix
+    text = re.sub(r'\s*USE A CTA MENU[^\n]*SHOWN ABOVE', '', text, flags=re.IGNORECASE)
+    # Strip "OPTION PER TOPIC SHOWN ABOVE" fragment alone
+    text = re.sub(r'\s*OPTION PER TOPIC SHOWN ABOVE', '', text, flags=re.IGNORECASE)
+
+    # Phase 2: Line-by-line filtering of developer instruction lines
+
+    clean_lines: list[str] = []
+    prev_was_blank = False
+
+    for line in text.splitlines():
+        if _is_developer_instruction_line(line):
+            # Mark that we removed a line so we can collapse multiple blank lines
+            prev_was_blank = True
+            continue
+
+        # Collapse consecutive blank lines left by removals
+        if not line.strip():
+            if prev_was_blank:
+                continue
+            prev_was_blank = True
+        else:
+            prev_was_blank = False
+
+        clean_lines.append(line)
+
+    return "\n".join(clean_lines).strip()
+
+
+@lru_cache(maxsize=1)
+def _get_clean_docx_text() -> str:
+    """Return the developer-manual text with all developer instructions stripped (cached)."""
+    raw = get_docx_knowledge_string()
+    return strip_developer_instructions(raw)
+
+
+def get_clean_docx_knowledge_string() -> str:
+    """Return cleaned developer-manual text safe for use in system prompts."""
+    return _get_clean_docx_text()
+
+
 # ── Q&A Extraction and Verbatim Matching Engine ──────────────────────────────
 
 def extract_qa_pairs(full_text: str) -> list[dict[str, str]]:
@@ -144,6 +315,11 @@ def extract_qa_pairs(full_text: str) -> list[dict[str, str]]:
     Parses full document text into structured Q&A objects:
     [{ 'question': '...', 'answer': '...' }]
     """
+    # <CHANGED: Clean non-breaking spaces and normalize text>
+    full_text = full_text.replace("\xa0", " ")
+    # Strip inline CTA instructions embedded within answer text
+    full_text = re.sub(r'\s*👉\s*USE A CTA MENU[^\n]*', '', full_text, flags=re.IGNORECASE)
+    full_text = re.sub(r'\s*✔\s*USE A CTA MENU[^\n]*', '', full_text, flags=re.IGNORECASE)
     qa_list = []
     lines = full_text.splitlines()
     current_q = None
@@ -154,7 +330,13 @@ def extract_qa_pairs(full_text: str) -> list[dict[str, str]]:
         if not stripped:
             continue
 
-        if re.match(r"^Q\s*:\s*", stripped, re.IGNORECASE):
+        # <CHANGED: Detect questions starting with Q: or ending with ? (e.g. "Can anyone view the job opportunities?")>
+        is_q = bool(re.match(r"^Q\s*:\s*", stripped, re.IGNORECASE)) or (
+            stripped.endswith("?") and len(stripped) > 10 and not stripped.startswith("👉")
+        )
+        is_a = bool(re.match(r"^A\s*:\s*", stripped, re.IGNORECASE))
+
+        if is_q:
             if current_q and current_a_lines:
                 qa_list.append({
                     "question": current_q,
@@ -162,10 +344,10 @@ def extract_qa_pairs(full_text: str) -> list[dict[str, str]]:
                 })
             current_q = re.sub(r"^Q\s*:\s*", "", stripped, flags=re.IGNORECASE).strip()
             current_a_lines = []
-        elif current_q is not None and re.match(r"^A\s*:\s*", stripped, re.IGNORECASE):
+        elif is_a:
             a_first_line = re.sub(r"^A\s*:\s*", "", stripped, flags=re.IGNORECASE).strip()
             current_a_lines = [a_first_line]
-        elif current_q is not None and len(current_a_lines) > 0:
+        elif current_q is not None:
             # Skip CTA instruction lines — they are not part of the answer content
             if (
                 stripped.startswith("👉")
@@ -179,15 +361,23 @@ def extract_qa_pairs(full_text: str) -> list[dict[str, str]]:
             if (
                 "AI CHATBOT TRAINING INSTRUCTIONS" in upper_s
                 or "TOPIC OVERVIEW" in upper_s
+                or "IMPORTANT AI RULE" in upper_s
+                or "AI RULE" in upper_s
+                or "AI RESPONSE RULES" in upper_s
                 or upper_s.startswith("THE CHATBOT SHOULD")
                 or upper_s.startswith("THE AI SHOULD")
+                or upper_s.startswith("THE AI MUST")
+                or upper_s.startswith("NEVER TELL USERS")
+                or upper_s.startswith("DO NOT TELL USERS")
                 or upper_s.startswith("CAREER GROWTH TOPIC OVERVIEW")
                 or upper_s.startswith("DEALERSHIP LIABILITY & EMPLOYMENT DISCLAIMER")
+                or upper_s.startswith("JOB OPPORTUNITIES POLICY")
             ):
-                qa_list.append({
-                    "question": current_q,
-                    "answer": "\n".join(current_a_lines).strip()
-                })
+                if current_q and current_a_lines:
+                    qa_list.append({
+                        "question": current_q,
+                        "answer": "\n".join(current_a_lines).strip()
+                    })
                 current_q = None
                 current_a_lines = []
                 continue
@@ -241,6 +431,14 @@ def find_exact_qa_match(query: str, threshold: float = 0.65) -> dict[str, str] |
         if w not in STOP_WORDS and len(w) > 2
     }
 
+    # Pass 1: Check for exact normalized match across all QA pairs (latest entries first)
+    for qa in reversed(qa_pairs):
+        target_q = qa["question"].lower()
+        target_norm = _clean_str(target_q)
+        if q_norm == target_norm:
+            return qa
+
+    # Pass 2: Fuzzy matching if no exact match found
     best_match = None
     best_score = 0.0
 
@@ -255,21 +453,10 @@ def find_exact_qa_match(query: str, threshold: float = 0.65) -> dict[str, str] |
             # If user query is asking about price/cost, do not match a non-pricing QA pair
             continue
 
-        # Exact normalized match
-        if q_norm == target_norm:
-            return qa
-
-        # Direct containment check: if the question is a clear substring of user's query
-        if (q_norm in target_norm or target_norm in q_norm):
-            shorter_len = len(min(q_norm, target_norm, key=len))
-            ratio = shorter_len / float(len(max(q_norm, target_norm, key=len)))
-            if shorter_len > 10 and ratio > 0.5:
-                return qa
-
         # SequenceMatcher ratio
         seq_score = SequenceMatcher(None, q_norm, target_norm).ratio()
 
-        # rapidfuzz token sort ratio if available (more reliable than token_set_ratio)
+        # rapidfuzz token sort ratio if available
         _fuzz = fuzz
         if _fuzz is not None:
             fuzz_score = float(_fuzz.ratio(query_lower, target_q)) / 100.0

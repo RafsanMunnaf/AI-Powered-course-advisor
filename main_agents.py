@@ -12,7 +12,12 @@ from typing import Any
 from dotenv import load_dotenv
 from openai import OpenAI
 
-from docx_knowledge import find_exact_qa_match, get_docx_knowledge_string
+from docx_knowledge import (
+    find_exact_qa_match,
+    get_clean_docx_knowledge_string, 
+    get_docx_knowledge_string,
+    strip_developer_instructions,
+)
 
 load_dotenv()
 
@@ -27,7 +32,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s | %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
-)
+)  
 _logger = logging.getLogger(__name__)
 
 
@@ -59,7 +64,7 @@ AGENTS = {
     },
     "Marcus": {
         "gender": "male",
-        "persona": "professional, polite, detailed, and structured",
+        "persona": "professional, polite, detailed, and structured",     
         "default_role": "dealer",
         "title": "Partnerships Rep",
     },
@@ -149,7 +154,7 @@ def empty_user_info() -> dict[str, str | None]:
     return {"name": None, "email": None, "phone": None}
 
 
-def validate_role(role: str) -> str:
+def validate_role(role: str) -> str:   
     if role not in SUPPORTED_ROLES:
         raise ValueError(f"Unsupported role: {role!r}. Expected one of {sorted(SUPPORTED_ROLES)}.")
     return role
@@ -167,12 +172,12 @@ def get_system_prompt(
     user_query: str | None = None,
     agent_name: str | None = None,
 ) -> str:
-    validate_role(role)
+    validate_role(role) 
     resolved_agent = validate_agent(agent_name, role)
     agent_info = AGENTS.get(resolved_agent, AGENTS["Sophia"])
     persona_desc = agent_info.get("persona", "warm, kind, encouraging, and mentoring")
 
-    full_manual = get_docx_knowledge_string()
+    full_manual = get_clean_docx_knowledge_string()
 
     if role == "student":
         return f"""
@@ -197,7 +202,7 @@ TONE:
 
 PHRASES TO AVOID (from Developer Manual):
 - NEVER say "get rich", "guaranteed job", "guaranteed income",
-  "become an expert instantly", "life-changing results"
+    "become an expert instantly", "life-changing results"
 - NEVER use overhyped or misleading sales language
 
 AI RESTRICTIONS (from Developer Manual):
@@ -230,13 +235,24 @@ Pick 2-4 CTAs that are relevant to the topic discussed.
 STRICT ANSWERING RULES:
 1. The Developer Manual above is your SOLE source of truth. Answer ONLY using information explicitly stated in it.
 2. You MUST preserve the exact details and wording from the Developer Manual without altering or paraphrasing them.
-3. NEVER output internal developer notes, topic titles, or prompt instructions (such as "AI Chatbot Training Instructions", "Topic Overview", "The chatbot should...", "The AI should avoid..."). Output ONLY actual customer-facing answer sentences.
+3. NEVER output internal developer notes, topic titles, or prompt instructions. Output ONLY actual customer-facing answer sentences.
+   FORBIDDEN OUTPUT PATTERNS (never include these in your response):
+   - "AI Chatbot Training Instructions"
+   - "Topic Overview"
+   - "The chatbot should..." / "The AI should..." / "The AI must..."
+   - "Important AI Rule" / "AI Response Rules" / "AI Restrictions"
+   - Lines starting with ✔ or ❌ that describe AI behavior rules
+   - "Phrases the AI should use/avoid"
+   - "Recommended CTA Examples"
+   - "Train the AI chatbot..."
+   - Any sentence that describes what an AI or chatbot should or should not do
 4. You are strictly forbidden from inventing facts, using external knowledge, or making assumptions beyond what the manual states.
 5. If the answer is NOT explicitly stated in the Developer Manual, reply briefly:
    "I don't have that information in our official documentation, [Name] — please reach out to our support team."
 6. For disclaimer-related questions (legal, financial, tax, guarantees, refunds),
    always follow the Developer Manual's exact answers word for word.
 7. When the manual contains a Q&A that matches the user's question, use the exact answer text from the manual.
+8. Before outputting your response, mentally review it and remove any line that reads like a developer instruction rather than a customer-facing answer.
 """
     else:
         return f"""
@@ -293,13 +309,24 @@ Pick 2-4 CTAs that are relevant to the topic discussed.
 STRICT ANSWERING RULES:
 1. The Developer Manual above is your SOLE source of truth. Answer ONLY using information explicitly stated in it.
 2. You MUST preserve the exact details and wording from the Developer Manual without altering or paraphrasing them.
-3. NEVER output internal developer notes, topic titles, or prompt instructions (such as "AI Chatbot Training Instructions", "Topic Overview", "The chatbot should...", "The AI should avoid..."). Output ONLY actual customer-facing answer sentences.
+3. NEVER output internal developer notes, topic titles, or prompt instructions. Output ONLY actual customer-facing answer sentences.
+   FORBIDDEN OUTPUT PATTERNS (never include these in your response):
+   - "AI Chatbot Training Instructions"
+   - "Topic Overview"
+   - "The chatbot should..." / "The AI should..." / "The AI must..."
+   - "Important AI Rule" / "AI Response Rules" / "AI Restrictions"
+   - Lines starting with ✔ or ❌ that describe AI behavior rules
+   - "Phrases the AI should use/avoid"
+   - "Recommended CTA Examples"
+   - "Train the AI chatbot..."
+   - Any sentence that describes what an AI or chatbot should or should not do
 4. You are strictly forbidden from inventing facts, using external knowledge, or making assumptions beyond what the manual states.
 5. If the answer is NOT explicitly stated in the Developer Manual, reply briefly:
    "I don't have those specifics, [Name] — our partnerships team can walk you through it."
 6. For disclaimer-related questions (legal, financial, tax, guarantees, refunds),
    always follow the Developer Manual's exact answers word for word.
 7. When the manual contains a Q&A that matches the user's question, use the exact answer text from the manual.
+8. Before outputting your response, mentally review it and remove any line that reads like a developer instruction rather than a customer-facing answer.
 """
 
 
@@ -404,7 +431,7 @@ def build_messages(
             f"2. Never use the word 'assist'. Never say you are an AI or bot.\n"
             f"3. Provide complete and full answers ONLY from the Developer Manual without truncating or shortening.\n"
             f"4. NEVER use outside knowledge or invent information not in the Developer Manual.\n"
-            f"5. NEVER include internal developer notes or headers (like 'AI Chatbot Training Instructions', 'Topic Overview', 'The chatbot should...'). Output ONLY customer answer text.\n"
+            f"5. NEVER include internal developer notes, headers, or AI training instructions in your response. Forbidden patterns: 'AI Chatbot Training Instructions', 'Topic Overview', 'The chatbot should...', 'The AI should...', 'Important AI Rule', lines with ✔/❌ describing AI rules, 'Phrases the AI should use/avoid'. Output ONLY customer answer text.\n"
             f"6. You MUST end your response with this exact header and 2-4 relevant CTA bullets as HTML links:\n"
             f"**Choose from the below:**\n"
             f'👉 <a href="https://fastsalestrainingcenter.com/courses">Explore the Training Programs</a>\n'
@@ -421,7 +448,7 @@ def build_messages(
             f"2. Focus on ROI, commission rates, and partner support. Never say you are an AI/bot.\n"
             f"3. Provide complete and full answers ONLY from the Developer Manual without truncating or shortening.\n"
             f"4. NEVER use outside knowledge or invent information not in the Developer Manual.\n"
-            f"5. NEVER include internal developer notes or headers (like 'AI Chatbot Training Instructions', 'Topic Overview', 'The chatbot should...'). Output ONLY customer answer text.\n"
+            f"5. NEVER include internal developer notes, headers, or AI training instructions in your response. Forbidden patterns: 'AI Chatbot Training Instructions', 'Topic Overview', 'The chatbot should...', 'The AI should...', 'Important AI Rule', lines with ✔/❌ describing AI rules, 'Phrases the AI should use/avoid'. Output ONLY customer answer text.\n"
             f"6. You MUST end your response with this exact header and 2-4 relevant CTA bullets as HTML links:\n"
             f"**Choose from the below:**\n"
             f'👉 <a href="https://fastsalestrainingcenter.com/dealership">Explore Dealership Training Solutions</a>\n'
@@ -432,10 +459,10 @@ def build_messages(
         )
     messages.append({"role": "system", "content": reminder})
 
-    messages.append({"role": "user", "content": user_query})
+    messages.append({"role": "user", "content": user_query})   
     return messages
 
-
+  
 def generate_support_response(
     user_query: str,
     chat_history: list[dict[str, str]],
@@ -474,7 +501,7 @@ def create_conversation_state(
         agent_name=resolved_agent,
         user_info=user_info or empty_user_info()
     )
-    if include_confirmation and state.user_info.get("name"):
+    if include_confirmation and state.user_info.get("name"):   
         state.messages.append(
             {
                 "role": "assistant",
@@ -488,6 +515,135 @@ def append_message(state: ConversationState, role: str, content: str) -> None:
     state.messages.append({"role": role, "content": content})
 
 
+# ── Comprehensive output sanitizer ───────────────────────────────────────────
+
+# Regex patterns for detecting leaked developer instructions in AI output
+_OUTPUT_LEAK_REGEXES: list[re.Pattern[str]] = [
+    re.compile(p, re.IGNORECASE) for p in [
+        # "The AI / chatbot should/must/may/can/will ..." (with optional bullet prefix)
+        r"^[\u2022\-\*]?\s*the\s+(ai|chatbot|ai\s+chatbot)\s+(should|must|may|can|will|needs?\s+to)\b",
+        # "The AI should NOT / NEVER ..."
+        r"^[\u2022\-\*]?\s*the\s+(ai|chatbot|ai\s+chatbot)\s+should\s+(not|never)\b",
+        # "Train the AI chatbot ..."
+        r"^[\u2022\-\*]?\s*train\s+the\s+(ai|chatbot)",
+        # "The AI tone should ..."
+        r"^[\u2022\-\*]?\s*the\s+ai\s+tone\s+should\b",
+        # Mid-sentence: "the AI should redirect/encourage/avoid..."
+        r"\bthe\s+ai\s+(should|must)\s+(politely|redirect|understand|encourage|avoid|remain|reinforce|acknowledge|answer|reduce)\b",
+    ]
+]
+
+_OUTPUT_LEAK_PREFIXES: tuple[str, ...] = (
+    "IMPORTANT AI RULE",
+    "AI RULE",
+    "AI RESPONSE RULES",
+    "AI CHATBOT TRAINING INSTRUCTIONS",
+    "AI CHATBOT KNOWLEDGE BASE",
+    "AI COMMUNICATION STYLE",
+    "AI RESTRICTIONS",
+    "AI POSITIONING",
+    "IMPORTANT AI POSITIONING",
+    "RECOMMENDED AI PHRASES",
+    "RECOMMENDED CTA EXAMPLES",
+    "PHRASES THE AI SHOULD",
+    "THE AI MUST",
+    "THE AI SHOULD",
+    "THE AI MAY",
+    "THE AI CAN",
+    "THE CHATBOT SHOULD",
+    "THE CHATBOT MUST", 
+    "NEVER TELL USERS",
+    "DO NOT TELL USERS",
+    "TOPIC OVERVIEW",
+    "CAREER GROWTH TOPIC OVERVIEW",
+    "DEALERSHIP LIABILITY & EMPLOYMENT DISCLAIMER",
+    "JOB OPPORTUNITIES POLICY",
+    "LEGAL, BUSINESS & FINANCIAL LIMITATIONS",
+    "COURSE & CERTIFICATE POSITIONING",
+    "EXAMPLES OF DEALERSHIP TERMS TO TRAIN",
+    "GENERAL CTA OPTIONS FOR YOUR AI",
+    "EVERY CHATBOX ANSWER HAS TO END",
+    "A MENU CONNECTING TO EACH LINK",
+)
+
+_OUTPUT_LEAK_SUBSTRINGS: tuple[str, ...] = (
+    "AI CHATBOT TRAINING INSTRUCTIONS",
+    "THE CHATBOT SHOULD NOT",
+    "THE AI SHOULD NOT BE INTERPRETED",
+    "TOPIC OVERVIEW",
+)
+
+
+def sanitize_customer_answer(text: str) -> str:
+    """Strips internal AI rules, developer directives, and prompt headers from customer-facing text.
+
+    This is the last line of defense — applied to every response before it reaches the user.
+    It catches any developer instruction text that leaked through the system prompt or
+    was regurgitated by the model from the knowledge base.
+    """
+    if not text:
+        return text
+
+    # Strip inline CTA instructions embedded within response text
+    #   e.g. "...approved platform access.👉 USE A CTA MENU USING ONE OPTION PER TOPIC SHOWN ABOVE"
+    text = re.sub(r'\s*👉\s*USE A CTA MENU[^\n]*', '', text, flags=re.IGNORECASE)
+    text = re.sub(r'\s*✔\s*USE A CTA MENU[^\n]*', '', text, flags=re.IGNORECASE)
+    # Catch-all: strip bare "USE A CTA MENU..." even without emoji prefix
+    text = re.sub(r'\s*USE A CTA MENU[^\n]*SHOWN ABOVE', '', text, flags=re.IGNORECASE)
+    # Strip "OPTION PER TOPIC SHOWN ABOVE" fragment alone
+    text = re.sub(r'\s*OPTION PER TOPIC SHOWN ABOVE', '', text, flags=re.IGNORECASE)
+
+    clean_lines: list[str] = []
+    prev_was_blank = False
+
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not stripped:
+            if prev_was_blank:
+                continue
+            prev_was_blank = True
+            clean_lines.append(line)
+            continue
+
+        upper = stripped.upper()
+        is_leaked = False
+
+        # 1. Prefix match
+        for prefix in _OUTPUT_LEAK_PREFIXES:   
+            if upper.startswith(prefix):
+                is_leaked = True
+                break
+
+        # 2. Substring match
+        if not is_leaked:
+            for sub in _OUTPUT_LEAK_SUBSTRINGS:
+                if sub in upper:
+                    is_leaked = True
+                    break
+
+        # 3. Regex match (natural-language instruction patterns)
+        if not is_leaked:
+            for rx in _OUTPUT_LEAK_REGEXES:
+                if rx.search(stripped):
+                    is_leaked = True
+                    break
+
+        # 4. Lines that are only ✔/❌ rule lists (2+ markers)
+        if not is_leaked and stripped.startswith(("✔", "❌")):
+            check_count = stripped.count("✔") + stripped.count("❌")
+            if check_count >= 2:
+                is_leaked = True
+
+        if is_leaked:
+            prev_was_blank = True
+            continue
+
+        prev_was_blank = False
+        clean_lines.append(line)
+
+    return "\n".join(clean_lines).strip()
+
+
 def process_prompt(
     state: ConversationState,
     user_prompt: str,
@@ -497,12 +653,12 @@ def process_prompt(
     model: str = "gpt-4o-mini",
     temperature: float = 0.0,
 ) -> str:
-    append_message(state, "user", user_prompt)
+    append_message(state, "user", user_prompt) 
 
     # 1. Direct verbatim Q&A match lookup
     exact_match = find_exact_qa_match(user_prompt)
     if exact_match:
-        answer_text = exact_match["answer"]
+        answer_text = sanitize_customer_answer(exact_match["answer"])
 
         if state.role == "student":
             cta_block = (
@@ -520,7 +676,7 @@ def process_prompt(
                 '👉 <a href="https://www.amazon.com/dp/B08Y8HSVJW?binding=hardcover&searchxofy=true&ref_=dbs_s_aps_series_rwt_thcv&qid=1777409485&sr=8-1">Access the Affiliate Program</a>\n'
                 '👉 <a href="https://fastsalestrainingcenter.com/#contact-us">Contact Our Team</a>'
             )
-
+  
         response = f"{answer_text}\n\n{cta_block}"
         append_message(state, "assistant", response)
         return response
@@ -537,6 +693,8 @@ def process_prompt(
         model=model,
         temperature=temperature,
     )
+    # CRITICAL: Sanitize OpenAI response to strip any leaked developer instructions
+    response = sanitize_customer_answer(response)
     append_message(state, "assistant", response)
     return response
 
@@ -547,7 +705,7 @@ __all__ = [
     "EMAIL_RE",
     "MAX_HISTORY_PAIRS",    
     "PHONE_RE",
-    "QUICK_REPLIES",
+    "QUICK_REPLIES", 
     "ROLE_METADATA",
     "SKIP_WORDS",
     "SUPPORTED_ROLES",
@@ -556,7 +714,7 @@ __all__ = [
     "build_messages",
     "build_user_info_note",  
     "create_conversation_state",
-    "empty_user_info",
+    "empty_user_info",        
     "extract_email",
     "extract_name",
     "extract_phone",
@@ -651,13 +809,14 @@ if __name__ == "__main__":
             user_input = input("You: ").strip()
         except (EOFError, KeyboardInterrupt):
             print(f"\n{agent}: Goodbye, {fname}! Have a great day! 👋")
+            
             break
 
         if not user_input:
-            continue
+            continue   
 
         if user_input.lower() in ("quit", "exit", "q"):
-            print(f"\n{agent}: Thanks for chatting, {fname}! Feel free to come back anytime. 👋\n")
+            print(f"\n{agent}: Thanks for chatting, {fname}! Feel free to come back anytime. 👋\n")   
             _logger.info("Session ended by user")
             break
 
@@ -666,9 +825,9 @@ if __name__ == "__main__":
         try:
             reply = process_prompt(state, user_input)
         except Exception as e:
-            reply = f"Sorry, I ran into a technical issue. Please try again. (Error: {e})"
+            reply = f"Sorry, I ran into a technical issue. Please try again. (Error: {e})"         
 
         print(f"\n{agent}: {reply}\n")
-        _logger.info("BOT: %s", reply)
-
+        _logger.info("BOT: %s", reply)   
+   
     _logger.info("=== Session ended | exchanges=%d ===", len(state.messages) // 2)
